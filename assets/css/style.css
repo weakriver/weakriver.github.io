@@ -1,0 +1,879 @@
+/* =========================================================
+   弱水 — Anthropic-inspired blog
+   Supports Chinese essays and English research posts.
+   ========================================================= */
+
+:root {
+  /* Light theme — warm cream palette */
+  --bg: #F0EEE6;
+  --bg-elevated: #F7F5ED;
+  --bg-subtle: #E8E5DA;
+  --text: #1F1E1B;
+  --text-soft: #2C2A26;
+  --text-muted: #6B6862;
+  --border: #D9D5CB;
+  --border-strong: #BFBAAD;
+  --accent: #CC785C;
+  --accent-soft: #E89878;
+
+  /* Chinese typography */
+  --font-zh-serif:
+    "Noto Serif SC", "Source Han Serif SC", "Source Han Serif CN",
+    "STSong", "Songti SC", "SimSun", Georgia, serif;
+  --font-zh-sans:
+    "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+    "Source Han Sans SC", "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+  /* English typography (paper-style serif) */
+  --font-en-serif:
+    "Source Serif 4", "Source Serif Pro",
+    "Iowan Old Style", "Charter", "Iowan", "Cambria",
+    Georgia, "Times New Roman", serif;
+  --font-en-sans:
+    "Inter", "Source Sans 3", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+  /* Monospace */
+  --font-mono:
+    "JetBrains Mono", "Fira Code", "SF Mono", "Menlo",
+    "Consolas", monospace;
+
+  /* Default font stacks (Chinese by default) */
+  --font-serif: var(--font-zh-serif);
+  --font-sans: var(--font-zh-sans);
+
+  --content-width: 680px;
+  --content-width-wide: 760px;
+  --max-width: 1120px;
+  --radius: 6px;
+  --transition: 160ms ease;
+}
+
+[data-theme="dark"] {
+  --bg: #181715;
+  --bg-elevated: #211F1B;
+  --bg-subtle: #26241F;
+  --text: #ECE8DD;
+  --text-soft: #DAD5C6;
+  --text-muted: #8E8A80;
+  --border: #34312B;
+  --border-strong: #4A4740;
+  --accent: #E89878;
+  --accent-soft: #CC785C;
+}
+
+* { box-sizing: border-box; }
+*::selection { background: var(--accent); color: var(--bg); }
+
+html, body { margin: 0; padding: 0; }
+
+html {
+  font-size: 17px;
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-serif);
+  line-height: 1.8;
+  font-feature-settings: "palt" 1;
+  transition: background-color var(--transition), color var(--transition);
+}
+
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ============================================
+   Header
+   ============================================ */
+.site-header {
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: saturate(180%) blur(10px);
+  -webkit-backdrop-filter: saturate(180%) blur(10px);
+}
+
+.header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 24px;
+}
+
+.site-title {
+  font-family: var(--font-zh-serif);
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: var(--text);
+  text-decoration: none;
+  padding-left: 0.18em;
+}
+
+.site-nav { display: flex; gap: 8px; align-items: center; }
+
+#theme-toggle {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-soft);
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition);
+}
+#theme-toggle:hover {
+  color: var(--text);
+  border-color: var(--border-strong);
+  background: var(--bg-elevated);
+}
+#theme-toggle .icon-sun { display: none; }
+#theme-toggle .icon-moon { display: inline-block; }
+[data-theme="dark"] #theme-toggle .icon-sun { display: inline-block; }
+[data-theme="dark"] #theme-toggle .icon-moon { display: none; }
+
+/* ============================================
+   Hero (list view top)
+   ============================================ */
+main { padding-bottom: 96px; }
+
+.hero {
+  padding: 96px 0 64px;
+  text-align: center;
+}
+.hero-title {
+  font-family: var(--font-zh-serif);
+  font-size: clamp(2.4rem, 5vw, 3.4rem);
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  margin: 0 0 18px;
+  color: var(--text);
+}
+.hero-tagline {
+  color: var(--text-muted);
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  margin: 0;
+}
+
+/* ============================================
+   Tag filter
+   ============================================ */
+.tag-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 auto 56px;
+  justify-content: center;
+  max-width: 760px;
+}
+.tag-chip {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  padding: 6px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-family: var(--font-zh-sans);
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  transition: all var(--transition);
+}
+.tag-chip:hover {
+  color: var(--text);
+  border-color: var(--border-strong);
+  background: var(--bg-elevated);
+}
+.tag-chip.active {
+  background: var(--text);
+  color: var(--bg);
+  border-color: var(--text);
+}
+
+/* ============================================
+   Post list
+   ============================================ */
+.post-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 auto;
+  max-width: 760px;
+}
+.post-item { border-top: 1px solid var(--border); }
+.post-item:last-child { border-bottom: 1px solid var(--border); }
+
+.post-link {
+  display: block;
+  padding: 36px 4px;
+  text-decoration: none;
+  color: inherit;
+  transition: opacity var(--transition);
+}
+.post-link:hover { opacity: 0.78; }
+
+.post-meta-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-family: var(--font-zh-sans);
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+  letter-spacing: 0.04em;
+}
+.post-link[data-lang="en"] .post-meta-row {
+  font-family: var(--font-en-sans);
+  letter-spacing: 0.02em;
+}
+
+.post-tag {
+  background: var(--bg-elevated);
+  padding: 2px 10px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  font-size: 0.78rem;
+  color: var(--text-soft);
+  font-family: var(--font-zh-sans);
+}
+
+.post-item-title {
+  font-family: var(--font-zh-serif);
+  font-size: 1.6rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  margin: 0 0 10px;
+  line-height: 1.45;
+}
+.post-link[data-lang="en"] .post-item-title {
+  font-family: var(--font-en-serif);
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  line-height: 1.3;
+}
+
+.post-excerpt {
+  color: var(--text-muted);
+  font-size: 1rem;
+  line-height: 1.8;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.post-link[data-lang="en"] .post-excerpt {
+  font-family: var(--font-en-serif);
+  line-height: 1.6;
+}
+
+.list-status {
+  text-align: center;
+  color: var(--text-muted);
+  font-family: var(--font-zh-sans);
+  font-size: 0.9rem;
+  padding: 32px 0;
+}
+
+/* ============================================
+   Post view
+   ============================================ */
+.post-view {
+  max-width: var(--content-width);
+  padding-top: 32px;
+}
+.post-view[data-lang="en"] { max-width: var(--content-width-wide); }
+
+.back-link {
+  color: var(--text-muted);
+  font-family: var(--font-zh-sans);
+  font-size: 0.9rem;
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  transition: color var(--transition);
+}
+.post-view[data-lang="en"] .back-link { font-family: var(--font-en-sans); }
+.back-link:hover { color: var(--text); }
+
+.post-header {
+  margin: 56px 0 64px;
+  text-align: center;
+}
+.post-header h1 {
+  font-family: var(--font-zh-serif);
+  font-size: clamp(1.7rem, 4vw, 2.4rem);
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  line-height: 1.5;
+  margin: 0 0 22px;
+}
+.post-view[data-lang="en"] .post-header h1 {
+  font-family: var(--font-en-serif);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  font-size: clamp(1.9rem, 4.5vw, 2.6rem);
+  line-height: 1.2;
+}
+
+.post-meta {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-family: var(--font-zh-sans);
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+}
+.post-view[data-lang="en"] .post-meta {
+  font-family: var(--font-en-sans);
+  letter-spacing: 0.02em;
+}
+.post-tags-inline { display: inline-flex; gap: 8px; }
+
+.post-footer {
+  margin-top: 80px;
+  padding-top: 32px;
+  border-top: 1px solid var(--border);
+}
+
+/* ============================================
+   Prose (Chinese — default)
+   ============================================ */
+.prose {
+  font-family: var(--font-zh-serif);
+  font-size: 1.1rem;
+  line-height: 2.0;
+  color: var(--text-soft);
+}
+.prose > * + * { margin-top: 1.4em; }
+
+.prose p { text-indent: 2em; margin: 0; }
+
+.prose h1, .prose h2, .prose h3, .prose h4 {
+  font-family: var(--font-zh-serif);
+  color: var(--text);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  line-height: 1.45;
+  margin: 2em 0 0.8em;
+}
+.prose h2 { font-size: 1.5rem; }
+.prose h3 { font-size: 1.25rem; }
+.prose h4 { font-size: 1.1rem; }
+
+.prose blockquote {
+  border-left: 3px solid var(--accent);
+  padding: 0.2em 0 0.2em 1.5em;
+  margin: 1.5em 0;
+  color: var(--text-muted);
+  font-style: normal;
+}
+.prose blockquote p { text-indent: 0; }
+
+.prose a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  transition: color var(--transition);
+}
+.prose a:hover { color: var(--accent-soft); }
+
+.prose ul, .prose ol { margin: 1em 0 1em 1.4em; padding-left: 1em; }
+.prose li { margin-bottom: 0.4em; }
+.prose li > p { text-indent: 0; }
+
+.prose code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: var(--bg-elevated);
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+}
+
+.prose pre {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  padding: 1em 1.2em;
+  border-radius: var(--radius);
+  overflow-x: auto;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+.prose pre code {
+  background: transparent;
+  border: none;
+  padding: 0;
+  font-size: inherit;
+}
+
+.prose img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  display: block;
+  margin: 1.8em auto;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  padding: 6px;
+}
+
+.prose hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 2.4em auto;
+  width: 50%;
+}
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+  font-family: var(--font-zh-sans);
+  margin: 1.5em 0;
+}
+.prose th, .prose td {
+  border-bottom: 1px solid var(--border);
+  padding: 10px 14px;
+  text-align: left;
+  vertical-align: top;
+}
+.prose th {
+  background: var(--bg-elevated);
+  font-weight: 600;
+  border-bottom: 2px solid var(--border-strong);
+}
+
+/* ---- Horizontally scrollable tables ----
+   Markdown tables are wrapped by app.js in <div class="table-scroll">.
+   The wrapper holds the overflow so wide tables don't push the page. */
+.prose .table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 1.5em 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg);
+}
+.prose .table-scroll table {
+  width: max-content;       /* let the table size to its content */
+  min-width: 100%;          /* but never narrower than the column */
+  margin: 0;
+  border-radius: 0;
+}
+.prose .table-scroll > table > thead > tr > th:first-child,
+.prose .table-scroll > table > tbody > tr > td:first-child {
+  position: sticky;
+  left: 0;
+  background: var(--bg-elevated);
+  z-index: 1;
+}
+
+/* Per-column tuning for the philosophy-regression table (11 columns).
+   Letting columns size with min-widths keeps each cell readable while the
+   overflow wrapper handles horizontal scrolling. */
+.post-view[data-slug="philosophy-regression"] .table-scroll {
+  /* Break out of the prose column so the table has more room on wide screens */
+  width: min(1400px, calc(100vw - 32px));
+  margin-left: calc((100% - min(1400px, calc(100vw - 32px))) / 2);
+  margin-right: calc((100% - min(1400px, calc(100vw - 32px))) / 2);
+  /* Show ~10 rows; scroll vertically for the rest. */
+  max-height: 620px;
+  overflow-y: auto;
+}
+/* Keep the header row visible while the body scrolls vertically. */
+.post-view[data-slug="philosophy-regression"] .table-scroll thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--bg-elevated);
+}
+/* The sticky first column needs a higher z-index than body cells but lower
+   than the header (so the header still overlays it at the corner). */
+.post-view[data-slug="philosophy-regression"] .table-scroll thead th:first-child {
+  z-index: 3;
+}
+.post-view[data-slug="philosophy-regression"] .table-scroll th,
+.post-view[data-slug="philosophy-regression"] .table-scroll td {
+  white-space: normal;
+  vertical-align: top;
+  line-height: 1.55;
+  padding: 10px 14px;
+  font-size: 0.92rem;
+}
+.post-view[data-slug="philosophy-regression"] .table-scroll th:nth-child(1),
+.post-view[data-slug="philosophy-regression"] .table-scroll td:nth-child(1)  { min-width: 40px;  text-align: right; color: var(--text-muted); }
+.post-view[data-slug="philosophy-regression"] .table-scroll th:nth-child(2),
+.post-view[data-slug="philosophy-regression"] .table-scroll td:nth-child(2)  { min-width: 130px; font-weight: 500; }
+.post-view[data-slug="philosophy-regression"] .table-scroll th:nth-child(3),
+.post-view[data-slug="philosophy-regression"] .table-scroll td:nth-child(3)  { min-width: 200px; }
+.post-view[data-slug="philosophy-regression"] .table-scroll th:nth-child(4),
+.post-view[data-slug="philosophy-regression"] .table-scroll td:nth-child(4)  { min-width: 220px; }
+.post-view[data-slug="philosophy-regression"] .table-scroll th:nth-child(5),
+.post-view[data-slug="philosophy-regression"] .table-scroll td:nth-child(5)  { min-width: 120px; }
+.post-view[data-slug="philosophy-regression"] .table-scroll th:nth-child(6),
+.post-view[data-slug="philosophy-regression"] .table-scroll td:nth-child(6)  { min-width: 200px; }
+.post-view[data-slug="philosophy-regression"] .table-scroll th:nth-child(7),
+.post-view[data-slug="philosophy-regression"] .table-scroll td:nth-child(7)  { min-width: 70px;  text-align: right; font-variant-numeric: tabular-nums; }
+.post-view[data-slug="philosophy-regression"] .table-scroll th:nth-child(8),
+.post-view[data-slug="philosophy-regression"] .table-scroll td:nth-child(8)  { min-width: 180px; }
+.post-view[data-slug="philosophy-regression"] .table-scroll th:nth-child(9),
+.post-view[data-slug="philosophy-regression"] .table-scroll td:nth-child(9)  { min-width: 180px; }
+.post-view[data-slug="philosophy-regression"] .table-scroll th:nth-child(10),
+.post-view[data-slug="philosophy-regression"] .table-scroll td:nth-child(10) { min-width: 220px; }
+.post-view[data-slug="philosophy-regression"] .table-scroll th:nth-child(11),
+.post-view[data-slug="philosophy-regression"] .table-scroll td:nth-child(11) { min-width: 180px; font-weight: 600; color: var(--accent); }
+
+/* ============================================
+   Prose — English overrides
+   ============================================ */
+.prose.lang-en {
+  font-family: var(--font-en-serif);
+  font-size: 1.08rem;
+  line-height: 1.72;
+  color: var(--text-soft);
+  font-feature-settings: "kern" 1, "liga" 1, "onum" 1;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  text-align: left;
+}
+.prose.lang-en > * + * { margin-top: 1.3em; }
+.prose.lang-en p { text-indent: 0; margin: 0; }
+
+.prose.lang-en h1, .prose.lang-en h2,
+.prose.lang-en h3, .prose.lang-en h4 {
+  font-family: var(--font-en-serif);
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  line-height: 1.25;
+  margin: 2.2em 0 0.7em;
+}
+.prose.lang-en > h1:first-child {
+  font-weight: 500;
+  text-align: center;
+  font-size: 1.9rem;
+  letter-spacing: -0.01em;
+  margin: 0.2em 0 0.6em;
+  line-height: 1.18;
+}
+/* Italic line right after the H1 acts as a subtitle */
+.prose.lang-en > h1:first-child + p,
+.prose.lang-en > h1:first-child + p > em:only-child {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 1.05rem;
+  font-style: italic;
+}
+.prose.lang-en h2 { font-size: 1.55rem; }
+.prose.lang-en h3 { font-size: 1.22rem; }
+.prose.lang-en h4 { font-size: 1.05rem; }
+
+.prose.lang-en blockquote {
+  font-style: italic;
+  color: var(--text-muted);
+}
+.prose.lang-en blockquote p { text-indent: 0; }
+
+.prose.lang-en ul, .prose.lang-en ol {
+  margin: 1em 0 1em 1.2em;
+  padding-left: 0.6em;
+}
+.prose.lang-en li { margin-bottom: 0.35em; }
+
+.prose.lang-en table {
+  font-family: var(--font-en-sans);
+  font-size: 0.93rem;
+  line-height: 1.5;
+}
+.prose.lang-en th, .prose.lang-en td {
+  padding: 8px 12px;
+}
+
+.prose.lang-en code {
+  font-family: var(--font-mono);
+  font-size: 0.87em;
+  font-feature-settings: normal;
+}
+
+/* ============================================
+   KaTeX adjustments
+   ============================================ */
+.prose .katex { font-size: 1.03em; }
+.prose .katex-display {
+  margin: 1.6em 0;
+  padding: 0.5em 0.2em;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+.prose .katex-display > .katex {
+  font-size: 1.12em;
+  white-space: nowrap;
+}
+.prose .katex-display > .katex > .katex-html {
+  display: inline-block;
+  white-space: nowrap;
+}
+.prose .math-error {
+  color: var(--accent);
+  background: var(--bg-elevated);
+  border-color: var(--accent);
+}
+/* Inherit text color for dark mode */
+.prose .katex,
+.prose .katex .mord,
+.prose .katex .mop,
+.prose .katex .mrel,
+.prose .katex .mbin,
+.prose .katex .mpunct,
+.prose .katex .mopen,
+.prose .katex .mclose { color: inherit; }
+
+/* ============================================
+   Interactive widgets — Projective-Attention
+   ============================================ */
+.pa-widget {
+  margin: 2.2em 0;
+  padding: 18px 18px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-elevated);
+  color: var(--text-soft);
+  font-family: var(--font-en-sans);
+}
+.pa-widget .pa-header { margin: 0 0 12px; }
+.pa-widget .pa-title {
+  font-family: var(--font-en-serif);
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  margin: 0 0 6px;
+  color: var(--text);
+}
+.pa-widget .pa-caption {
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--text-muted);
+  margin: 0;
+  text-indent: 0;
+}
+.pa-widget .pa-caption code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background: var(--bg-subtle);
+  padding: 1px 5px;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+}
+.pa-widget .pa-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  margin: 8px 0 4px;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  color: var(--text);
+  cursor: crosshair;
+}
+.pa-widget .pa-svg .pa-query-dot { cursor: grab; }
+
+.pa-widget .pa-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 22px;
+  align-items: center;
+  padding-top: 10px;
+  margin-top: 6px;
+  border-top: 1px solid var(--border);
+  font-size: 0.86rem;
+  color: var(--text-soft);
+}
+.pa-widget .pa-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.pa-widget .pa-control-label {
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  letter-spacing: 0.02em;
+}
+
+.pa-widget .pa-seg {
+  display: inline-flex;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--bg);
+}
+.pa-widget .pa-seg-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  padding: 4px 12px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.pa-widget .pa-seg-btn:hover { color: var(--text); }
+.pa-widget .pa-seg-btn.is-active {
+  background: var(--text);
+  color: var(--bg);
+}
+
+.pa-widget .pa-slider {
+  width: 130px;
+  accent-color: var(--accent);
+}
+.pa-widget .pa-out {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  min-width: 2.2em;
+  text-align: right;
+  color: var(--text);
+}
+
+.pa-widget .pa-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: var(--text-soft);
+}
+.pa-widget .pa-check input { accent-color: var(--accent); }
+
+.pa-widget .pa-reset {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.pa-widget .pa-reset:hover {
+  color: var(--text);
+  border-color: var(--border-strong);
+  background: var(--bg-subtle);
+}
+
+@media (max-width: 640px) {
+  .pa-widget { padding: 14px 12px 10px; }
+  .pa-widget .pa-controls { gap: 10px 14px; }
+  .pa-widget .pa-slider { width: 100px; }
+}
+
+/* ============================================
+   Dual-widget layout (side-by-side on wide screens)
+   ============================================ */
+.dual-widget-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  margin: 2em 0;
+}
+.dual-widget-row > [data-widget] {
+  min-width: 0;     /* allow grid children to shrink */
+  overflow: hidden;
+  border-radius: var(--radius);
+}
+
+/* The east-west timeline holds two panels internally and wants more
+   horizontal room than the standard prose column gives. Break out of
+   the surrounding max-width by negative auto-margins, capped at 1100px
+   and never wider than the viewport minus a small gutter. */
+.prose > [data-widget="east-west"] {
+  width: min(1100px, calc(100vw - 48px));
+  margin-left: calc((100% - min(1100px, calc(100vw - 48px))) / 2);
+  margin-right: calc((100% - min(1100px, calc(100vw - 48px))) / 2);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+/* Metaphysics post: title carries a <br>, so the header needs room to
+   keep each of the two lines unbroken. Widen out of the post-view column
+   and pin each line with white-space: nowrap. */
+.post-view[data-slug="metaphysics"] .post-header {
+  width: min(1000px, calc(100vw - 32px));
+  margin-left: calc((100% - min(1000px, calc(100vw - 32px))) / 2);
+  margin-right: calc((100% - min(1000px, calc(100vw - 32px))) / 2);
+}
+.post-view[data-slug="metaphysics"] .post-header h1 {
+  white-space: nowrap;       /* <br> still breaks; auto-wrapping disabled */
+  overflow: visible;
+  line-height: 1.35;
+}
+/* On narrow screens, let it wrap naturally and shrink the font instead. */
+@media (max-width: 720px) {
+  .post-view[data-slug="metaphysics"] .post-header h1 {
+    white-space: normal;
+    font-size: 1.4rem;
+    line-height: 1.45;
+  }
+}
+
+@media (min-width: 960px) {
+  .dual-widget-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    /* Break out of the surrounding .prose / .post-view max-width
+       so the two widgets get real room to breathe. */
+    width: calc(100vw - 48px);
+    max-width: 1500px;
+    margin-left: calc(50% - 50vw + 24px);
+    margin-right: calc(50% - 50vw + 24px);
+  }
+}
+
+/* ============================================
+   Footer
+   ============================================ */
+.site-footer {
+  border-top: 1px solid var(--border);
+  padding: 40px 0;
+  text-align: center;
+  color: var(--text-muted);
+  font-family: var(--font-zh-sans);
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+}
+.site-footer p { margin: 0; }
+
+/* ============================================
+   Responsive
+   ============================================ */
+@media (max-width: 720px) {
+  html { font-size: 16px; }
+  .hero { padding: 64px 0 48px; }
+  .post-header { margin: 32px 0 48px; }
+  .prose { font-size: 1.02rem; line-height: 1.9; }
+  .prose.lang-en { font-size: 1.02rem; line-height: 1.7; }
+  .post-item-title { font-size: 1.35rem; }
+  .header-inner { padding: 14px 20px; }
+  .container { padding: 0 20px; }
+  .prose table { font-size: 0.85rem; }
+  .prose th, .prose td { padding: 6px 8px; }
+  .prose .katex-display > .katex { font-size: 1em; }
+}
+
+/* No-flash dark mode init */
+html.theme-loading body { visibility: hidden; }

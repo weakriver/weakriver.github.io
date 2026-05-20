@@ -1,0 +1,131 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1700" height="900" viewBox="0 0 1700 900">
+<rect width="100%" height="100%" fill="white"/>
+<text x="850.0" y="34.0" font-size="24" font-weight="700" text-anchor="middle" fill="#222">ProjectionFeature / ProjectiveClipping Focused Diagnostics</text>
+<text x="850.0" y="60.0" font-size="13" font-weight="400" text-anchor="middle" fill="#555">Accuracy delta vs Standard; one seed local run</text>
+<text x="850.0" y="115.0" font-size="18" font-weight="700" text-anchor="middle" fill="#222">ProjectionFeature family</text>
+<line x1="130.0" y1="352.1" x2="1660.0" y2="352.1" stroke="#222" stroke-width="1.2"/>
+<line x1="130.0" y1="140.0" x2="130.0" y2="390.0" stroke="#bbb" stroke-width="1"/>
+<text x="122.0" y="140.0" font-size="10" font-weight="400" text-anchor="end" fill="#666">0.67</text>
+<text x="122.0" y="390.0" font-size="10" font-weight="400" text-anchor="end" fill="#666">-0.12</text>
+<text x="257.5" y="413.0" font-size="10" font-weight="400" text-anchor="middle" fill="#222">distr=16</text>
+<rect x="144.0" y="316.3" width="34.5" height="35.8" fill="#2196F3"/>
+<rect x="182.5" y="352.1" width="34.5" height="4.1" fill="#43A047"/>
+<rect x="221.0" y="352.1" width="34.5" height="1.6" fill="#66BB6A"/>
+<rect x="259.5" y="352.1" width="34.5" height="4.9" fill="#2E7D32"/>
+<rect x="298.0" y="352.1" width="34.5" height="6.2" fill="#A5D6A7"/>
+<rect x="336.5" y="350.0" width="34.5" height="2.1" fill="#C8E6C9"/>
+<text x="512.5" y="413.0" font-size="10" font-weight="400" text-anchor="middle" fill="#222">length-106</text>
+<rect x="399.0" y="352.1" width="34.5" height="0.8" fill="#2196F3"/>
+<rect x="437.5" y="349.2" width="34.5" height="2.9" fill="#43A047"/>
+<rect x="476.0" y="352.1" width="34.5" height="0.0" fill="#66BB6A"/>
+<rect x="514.5" y="348.8" width="34.5" height="3.3" fill="#2E7D32"/>
+<rect x="553.0" y="349.2" width="34.5" height="2.9" fill="#A5D6A7"/>
+<rect x="591.5" y="343.5" width="34.5" height="8.6" fill="#C8E6C9"/>
+<text x="767.5" y="413.0" font-size="10" font-weight="400" text-anchor="middle" fill="#222">multiq=4</text>
+<rect x="654.0" y="298.4" width="34.5" height="53.7" fill="#2196F3"/>
+<rect x="692.5" y="347.3" width="34.5" height="4.8" fill="#43A047"/>
+<rect x="731.0" y="352.1" width="34.5" height="1.2" fill="#66BB6A"/>
+<rect x="769.5" y="348.2" width="34.5" height="3.9" fill="#2E7D32"/>
+<rect x="808.0" y="351.3" width="34.5" height="0.8" fill="#A5D6A7"/>
+<rect x="846.5" y="344.1" width="34.5" height="8.0" fill="#C8E6C9"/>
+<text x="1022.5" y="413.0" font-size="10" font-weight="400" text-anchor="middle" fill="#222">needle-128</text>
+<rect x="909.0" y="350.5" width="34.5" height="1.6" fill="#2196F3"/>
+<rect x="947.5" y="352.1" width="34.5" height="2.9" fill="#43A047"/>
+<rect x="986.0" y="352.1" width="34.5" height="1.2" fill="#66BB6A"/>
+<rect x="1024.5" y="352.1" width="34.5" height="4.1" fill="#2E7D32"/>
+<rect x="1063.0" y="352.1" width="34.5" height="4.1" fill="#A5D6A7"/>
+<rect x="1101.5" y="352.1" width="34.5" height="4.5" fill="#C8E6C9"/>
+<text x="1277.5" y="413.0" font-size="10" font-weight="400" text-anchor="middle" fill="#222">needle-32</text>
+<rect x="1164.0" y="174.8" width="34.5" height="177.3" fill="#2196F3"/>
+<rect x="1202.5" y="329.1" width="34.5" height="23.0" fill="#43A047"/>
+<rect x="1241.0" y="351.7" width="34.5" height="0.4" fill="#66BB6A"/>
+<rect x="1279.5" y="336.1" width="34.5" height="16.0" fill="#2E7D32"/>
+<rect x="1318.0" y="341.8" width="34.5" height="10.3" fill="#A5D6A7"/>
+<rect x="1356.5" y="330.7" width="34.5" height="21.4" fill="#C8E6C9"/>
+<text x="1532.5" y="413.0" font-size="10" font-weight="400" text-anchor="middle" fill="#222">pairs=8</text>
+<rect x="1419.0" y="333.6" width="34.5" height="18.5" fill="#2196F3"/>
+<rect x="1457.5" y="352.1" width="34.5" height="4.5" fill="#43A047"/>
+<rect x="1496.0" y="350.9" width="34.5" height="1.2" fill="#66BB6A"/>
+<rect x="1534.5" y="352.1" width="34.5" height="5.3" fill="#2E7D32"/>
+<rect x="1573.0" y="352.1" width="34.5" height="7.8" fill="#A5D6A7"/>
+<rect x="1611.5" y="352.1" width="34.5" height="3.7" fill="#C8E6C9"/>
+<rect x="160.0" y="435.0" width="15.0" height="10.0" fill="#2196F3"/>
+<text x="182.0" y="445.0" font-size="11" font-weight="400" text-anchor="start" fill="#222">KeyNorm HPA</text>
+<rect x="380.0" y="435.0" width="15.0" height="10.0" fill="#43A047"/>
+<text x="402.0" y="445.0" font-size="11" font-weight="400" text-anchor="start" fill="#222">ProjectionFeature</text>
+<rect x="600.0" y="435.0" width="15.0" height="10.0" fill="#66BB6A"/>
+<text x="622.0" y="445.0" font-size="11" font-weight="400" text-anchor="start" fill="#222">ProjectionLight</text>
+<rect x="820.0" y="435.0" width="15.0" height="10.0" fill="#2E7D32"/>
+<text x="842.0" y="445.0" font-size="11" font-weight="400" text-anchor="start" fill="#222">ProjectionGated</text>
+<rect x="1040.0" y="435.0" width="15.0" height="10.0" fill="#A5D6A7"/>
+<text x="1062.0" y="445.0" font-size="11" font-weight="400" text-anchor="start" fill="#222">ProjectionShuffle</text>
+<rect x="1260.0" y="435.0" width="15.0" height="10.0" fill="#C8E6C9"/>
+<text x="1282.0" y="445.0" font-size="11" font-weight="400" text-anchor="start" fill="#222">ProjectionRandom</text>
+<text x="850.0" y="505.0" font-size="18" font-weight="700" text-anchor="middle" fill="#222">ProjectiveClipping family</text>
+<line x1="130.0" y1="742.1" x2="1660.0" y2="742.1" stroke="#222" stroke-width="1.2"/>
+<line x1="130.0" y1="530.0" x2="130.0" y2="780.0" stroke="#bbb" stroke-width="1"/>
+<text x="122.0" y="530.0" font-size="10" font-weight="400" text-anchor="end" fill="#666">0.67</text>
+<text x="122.0" y="780.0" font-size="10" font-weight="400" text-anchor="end" fill="#666">-0.12</text>
+<text x="257.5" y="803.0" font-size="10" font-weight="400" text-anchor="middle" fill="#222">distr=16</text>
+<rect x="144.0" y="706.3" width="29.0" height="35.8" fill="#2196F3"/>
+<rect x="177.0" y="739.6" width="29.0" height="2.5" fill="#5E35B1"/>
+<rect x="210.0" y="740.0" width="29.0" height="2.1" fill="#512DA8"/>
+<rect x="243.0" y="738.8" width="29.0" height="3.3" fill="#9575CD"/>
+<rect x="276.0" y="738.8" width="29.0" height="3.3" fill="#7E57C2"/>
+<rect x="309.0" y="739.6" width="29.0" height="2.5" fill="#B39DDB"/>
+<rect x="342.0" y="742.1" width="29.0" height="4.5" fill="#D1C4E9"/>
+<text x="512.5" y="803.0" font-size="10" font-weight="400" text-anchor="middle" fill="#222">length-106</text>
+<rect x="399.0" y="742.1" width="29.0" height="0.8" fill="#2196F3"/>
+<rect x="432.0" y="742.1" width="29.0" height="1.2" fill="#5E35B1"/>
+<rect x="465.0" y="742.1" width="29.0" height="1.2" fill="#512DA8"/>
+<rect x="498.0" y="742.1" width="29.0" height="1.2" fill="#9575CD"/>
+<rect x="531.0" y="742.1" width="29.0" height="1.6" fill="#7E57C2"/>
+<rect x="564.0" y="742.1" width="29.0" height="1.2" fill="#B39DDB"/>
+<rect x="597.0" y="737.2" width="29.0" height="4.9" fill="#D1C4E9"/>
+<text x="767.5" y="803.0" font-size="10" font-weight="400" text-anchor="middle" fill="#222">multiq=4</text>
+<rect x="654.0" y="688.4" width="29.0" height="53.7" fill="#2196F3"/>
+<rect x="687.0" y="742.1" width="29.0" height="0.1" fill="#5E35B1"/>
+<rect x="720.0" y="742.1" width="29.0" height="1.2" fill="#512DA8"/>
+<rect x="753.0" y="739.4" width="29.0" height="2.7" fill="#9575CD"/>
+<rect x="786.0" y="740.3" width="29.0" height="1.7" fill="#7E57C2"/>
+<rect x="819.0" y="741.6" width="29.0" height="0.5" fill="#B39DDB"/>
+<rect x="852.0" y="742.1" width="29.0" height="1.4" fill="#D1C4E9"/>
+<text x="1022.5" y="803.0" font-size="10" font-weight="400" text-anchor="middle" fill="#222">needle-128</text>
+<rect x="909.0" y="740.5" width="29.0" height="1.6" fill="#2196F3"/>
+<rect x="942.0" y="737.2" width="29.0" height="4.9" fill="#5E35B1"/>
+<rect x="975.0" y="737.2" width="29.0" height="4.9" fill="#512DA8"/>
+<rect x="1008.0" y="737.2" width="29.0" height="4.9" fill="#9575CD"/>
+<rect x="1041.0" y="736.8" width="29.0" height="5.3" fill="#7E57C2"/>
+<rect x="1074.0" y="737.2" width="29.0" height="4.9" fill="#B39DDB"/>
+<rect x="1107.0" y="742.1" width="29.0" height="0.4" fill="#D1C4E9"/>
+<text x="1277.5" y="803.0" font-size="10" font-weight="400" text-anchor="middle" fill="#222">needle-32</text>
+<rect x="1164.0" y="564.8" width="29.0" height="177.3" fill="#2196F3"/>
+<rect x="1197.0" y="546.7" width="29.0" height="195.4" fill="#5E35B1"/>
+<rect x="1230.0" y="560.7" width="29.0" height="181.4" fill="#512DA8"/>
+<rect x="1263.0" y="547.6" width="29.0" height="194.5" fill="#9575CD"/>
+<rect x="1296.0" y="542.6" width="29.0" height="199.5" fill="#7E57C2"/>
+<rect x="1329.0" y="551.7" width="29.0" height="190.4" fill="#B39DDB"/>
+<rect x="1362.0" y="625.3" width="29.0" height="116.8" fill="#D1C4E9"/>
+<text x="1532.5" y="803.0" font-size="10" font-weight="400" text-anchor="middle" fill="#222">pairs=8</text>
+<rect x="1419.0" y="723.6" width="29.0" height="18.5" fill="#2196F3"/>
+<rect x="1452.0" y="742.1" width="29.0" height="7.8" fill="#5E35B1"/>
+<rect x="1485.0" y="742.1" width="29.0" height="7.8" fill="#512DA8"/>
+<rect x="1518.0" y="742.1" width="29.0" height="7.4" fill="#9575CD"/>
+<rect x="1551.0" y="742.1" width="29.0" height="7.4" fill="#7E57C2"/>
+<rect x="1584.0" y="742.1" width="29.0" height="7.8" fill="#B39DDB"/>
+<rect x="1617.0" y="742.1" width="29.0" height="0.8" fill="#D1C4E9"/>
+<rect x="160.0" y="825.0" width="15.0" height="10.0" fill="#2196F3"/>
+<text x="182.0" y="835.0" font-size="11" font-weight="400" text-anchor="start" fill="#222">KeyNorm HPA</text>
+<rect x="380.0" y="825.0" width="15.0" height="10.0" fill="#5E35B1"/>
+<text x="402.0" y="835.0" font-size="11" font-weight="400" text-anchor="start" fill="#222">ProjClip</text>
+<rect x="600.0" y="825.0" width="15.0" height="10.0" fill="#512DA8"/>
+<text x="622.0" y="835.0" font-size="11" font-weight="400" text-anchor="start" fill="#222">ClipTopK</text>
+<rect x="820.0" y="825.0" width="15.0" height="10.0" fill="#9575CD"/>
+<text x="842.0" y="835.0" font-size="11" font-weight="400" text-anchor="start" fill="#222">ClipSoftplus</text>
+<rect x="1040.0" y="825.0" width="15.0" height="10.0" fill="#7E57C2"/>
+<text x="1062.0" y="835.0" font-size="11" font-weight="400" text-anchor="start" fill="#222">ClipMargin</text>
+<rect x="1260.0" y="825.0" width="15.0" height="10.0" fill="#B39DDB"/>
+<text x="1282.0" y="835.0" font-size="11" font-weight="400" text-anchor="start" fill="#222">ClipShuffle</text>
+<rect x="1480.0" y="825.0" width="15.0" height="10.0" fill="#D1C4E9"/>
+<text x="1502.0" y="835.0" font-size="11" font-weight="400" text-anchor="start" fill="#222">ClipRandom</text>
+</svg>

@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1650" height="560" viewBox="0 0 1650 560">
+<rect width="100%" height="100%" fill="white"/>
+<text x="825.0" y="35.0" font-size="23" font-weight="700" text-anchor="middle" fill="#222">Projection-Feature Variants: Delta vs Standard</text>
+<line x1="80.0" y1="354.5" x2="1560.0" y2="354.5" stroke="#222" stroke-width="1.2"/>
+<line x1="80.0" y1="90.0" x2="80.0" y2="390.0" stroke="#bbb" stroke-width="1"/>
+<text x="72.0" y="90.0" font-size="10" font-weight="400" text-anchor="end" fill="#666">0.89</text>
+<text x="72.0" y="390.0" font-size="10" font-weight="400" text-anchor="end" fill="#666">-0.12</text>
+<text x="228.0" y="414.0" font-size="10" font-weight="400" text-anchor="middle" fill="#222">distr=16</text>
+<rect x="92.0" y="324.5" width="24.5" height="30.0" fill="#2196F3"/>
+<rect x="119.5" y="354.5" width="24.5" height="11.9" fill="#43A047"/>
+<rect x="147.0" y="354.5" width="24.5" height="4.2" fill="#00A676"/>
+<rect x="174.5" y="354.5" width="24.5" height="15.8" fill="#66BB6A"/>
+<rect x="202.0" y="354.5" width="24.5" height="7.7" fill="#2E7D32"/>
+<rect x="229.5" y="311.7" width="24.5" height="42.8" fill="#1B5E20"/>
+<rect x="257.0" y="354.5" width="24.5" height="2.3" fill="#9CCC65"/>
+<rect x="284.5" y="354.5" width="24.5" height="12.7" fill="#00897B"/>
+<rect x="312.0" y="354.5" width="24.5" height="14.3" fill="#A5D6A7"/>
+<rect x="339.5" y="354.5" width="24.5" height="10.8" fill="#C8E6C9"/>
+<text x="524.0" y="414.0" font-size="10" font-weight="400" text-anchor="middle" fill="#222">length-106</text>
+<rect x="388.0" y="353.7" width="24.5" height="0.8" fill="#2196F3"/>
+<rect x="415.5" y="342.9" width="24.5" height="11.6" fill="#43A047"/>
+<rect x="443.0" y="342.6" width="24.5" height="11.9" fill="#00A676"/>
+<rect x="470.5" y="346.0" width="24.5" height="8.5" fill="#66BB6A"/>
+<rect x="498.0" y="342.9" width="24.5" height="11.6" fill="#2E7D32"/>
+<rect x="525.5" y="340.3" width="24.5" height="14.3" fill="#1B5E20"/>
+<rect x="553.0" y="354.5" width="24.5" height="0.8" fill="#9CCC65"/>
+<rect x="580.5" y="342.9" width="24.5" height="11.6" fill="#00897B"/>
+<rect x="608.0" y="342.9" width="24.5" height="11.6" fill="#A5D6A7"/>
+<rect x="635.5" y="341.4" width="24.5" height="13.1" fill="#C8E6C9"/>
+<text x="820.0" y="414.0" font-size="10" font-weight="400" text-anchor="middle" fill="#222">multiq=4</text>
+<rect x="684.0" y="311.1" width="24.5" height="43.4" fill="#2196F3"/>
+<rect x="711.5" y="352.2" width="24.5" height="2.3" fill="#43A047"/>
+<rect x="739.0" y="341.9" width="24.5" height="12.6" fill="#00A676"/>
+<rect x="766.5" y="354.5" width="24.5" height="3.2" fill="#66BB6A"/>
+<rect x="794.0" y="350.0" width="24.5" height="4.5" fill="#2E7D32"/>
+<rect x="821.5" y="295.6" width="24.5" height="58.9" fill="#1B5E20"/>
+<rect x="849.0" y="354.5" width="24.5" height="0.9" fill="#9CCC65"/>
+<rect x="876.5" y="352.5" width="24.5" height="2.0" fill="#00897B"/>
+<rect x="904.0" y="353.3" width="24.5" height="1.3" fill="#A5D6A7"/>
+<rect x="931.5" y="353.4" width="24.5" height="1.1" fill="#C8E6C9"/>
+<text x="1116.0" y="414.0" font-size="10" font-weight="400" text-anchor="middle" fill="#222">needle-32</text>
+<rect x="980.0" y="307.5" width="24.5" height="47.0" fill="#2196F3"/>
+<rect x="1007.5" y="354.1" width="24.5" height="0.4" fill="#43A047"/>
+<rect x="1035.0" y="348.3" width="24.5" height="6.2" fill="#00A676"/>
+<rect x="1062.5" y="329.9" width="24.5" height="24.7" fill="#66BB6A"/>
+<rect x="1090.0" y="325.6" width="24.5" height="28.9" fill="#2E7D32"/>
+<rect x="1117.5" y="101.8" width="24.5" height="252.7" fill="#1B5E20"/>
+<rect x="1145.0" y="354.5" width="24.5" height="0.0" fill="#9CCC65"/>
+<rect x="1172.5" y="354.5" width="24.5" height="0.8" fill="#00897B"/>
+<rect x="1200.0" y="354.5" width="24.5" height="4.2" fill="#A5D6A7"/>
+<rect x="1227.5" y="354.5" width="24.5" height="1.2" fill="#C8E6C9"/>
+<text x="1412.0" y="414.0" font-size="10" font-weight="400" text-anchor="middle" fill="#222">pairs=8</text>
+<rect x="1276.0" y="333.7" width="24.5" height="20.8" fill="#2196F3"/>
+<rect x="1303.5" y="352.6" width="24.5" height="1.9" fill="#43A047"/>
+<rect x="1331.0" y="353.7" width="24.5" height="0.8" fill="#00A676"/>
+<rect x="1358.5" y="354.5" width="24.5" height="3.5" fill="#66BB6A"/>
+<rect x="1386.0" y="353.0" width="24.5" height="1.5" fill="#2E7D32"/>
+<rect x="1413.5" y="337.9" width="24.5" height="16.6" fill="#1B5E20"/>
+<rect x="1441.0" y="354.1" width="24.5" height="0.4" fill="#9CCC65"/>
+<rect x="1468.5" y="352.6" width="24.5" height="1.9" fill="#00897B"/>
+<rect x="1496.0" y="353.0" width="24.5" height="1.5" fill="#A5D6A7"/>
+<rect x="1523.5" y="352.6" width="24.5" height="1.9" fill="#C8E6C9"/>
+<rect x="70.0" y="460.0" width="14.0" height="10.0" fill="#2196F3"/>
+<text x="90.0" y="470.0" font-size="10" font-weight="400" text-anchor="start" fill="#222">KeyNorm HPA</text>
+<rect x="225.0" y="460.0" width="14.0" height="10.0" fill="#43A047"/>
+<text x="245.0" y="470.0" font-size="10" font-weight="400" text-anchor="start" fill="#222">VanillaProjection</text>
+<rect x="380.0" y="460.0" width="14.0" height="10.0" fill="#00A676"/>
+<text x="400.0" y="470.0" font-size="10" font-weight="400" text-anchor="start" fill="#222">NormProjection</text>
+<rect x="535.0" y="460.0" width="14.0" height="10.0" fill="#66BB6A"/>
+<text x="555.0" y="470.0" font-size="10" font-weight="400" text-anchor="start" fill="#222">Bottleneck</text>
+<rect x="690.0" y="460.0" width="14.0" height="10.0" fill="#2E7D32"/>
+<text x="710.0" y="470.0" font-size="10" font-weight="400" text-anchor="start" fill="#222">ZeroInit</text>
+<rect x="845.0" y="460.0" width="14.0" height="10.0" fill="#1B5E20"/>
+<text x="865.0" y="470.0" font-size="10" font-weight="400" text-anchor="start" fill="#222">KeyNormProjection</text>
+<rect x="1000.0" y="460.0" width="14.0" height="10.0" fill="#9CCC65"/>
+<text x="1020.0" y="470.0" font-size="10" font-weight="400" text-anchor="start" fill="#222">LightProjection</text>
+<rect x="1155.0" y="460.0" width="14.0" height="10.0" fill="#00897B"/>
+<text x="1175.0" y="470.0" font-size="10" font-weight="400" text-anchor="start" fill="#222">GatedProjection</text>
+<rect x="1310.0" y="460.0" width="14.0" height="10.0" fill="#A5D6A7"/>
+<text x="1330.0" y="470.0" font-size="10" font-weight="400" text-anchor="start" fill="#222">ShuffledControl</text>
+<rect x="1465.0" y="460.0" width="14.0" height="10.0" fill="#C8E6C9"/>
+<text x="1485.0" y="470.0" font-size="10" font-weight="400" text-anchor="start" fill="#222">RandomControl</text>
+</svg>

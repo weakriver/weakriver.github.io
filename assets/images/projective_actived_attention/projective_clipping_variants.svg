@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1550" height="560" viewBox="0 0 1550 560">
+<rect width="100%" height="100%" fill="white"/>
+<text x="775.0" y="35.0" font-size="23" font-weight="700" text-anchor="middle" fill="#222">Projective Clipping Variants: Delta vs Standard</text>
+<line x1="80.0" y1="313.4" x2="1460.0" y2="313.4" stroke="#222" stroke-width="1.2"/>
+<line x1="80.0" y1="90.0" x2="80.0" y2="390.0" stroke="#bbb" stroke-width="1"/>
+<text x="72.0" y="90.0" font-size="10" font-weight="400" text-anchor="end" fill="#666">0.35</text>
+<text x="72.0" y="390.0" font-size="10" font-weight="400" text-anchor="end" fill="#666">-0.12</text>
+<text x="218.0" y="414.0" font-size="10" font-weight="400" text-anchor="middle" fill="#222">length-106</text>
+<rect x="92.0" y="311.7" width="25.3" height="1.7" fill="#2196F3"/>
+<rect x="120.3" y="292.6" width="25.3" height="20.8" fill="#5E35B1"/>
+<rect x="148.7" y="293.5" width="25.3" height="19.9" fill="#7E57C2"/>
+<rect x="177.0" y="292.6" width="25.3" height="20.8" fill="#9575CD"/>
+<rect x="205.3" y="292.6" width="25.3" height="20.8" fill="#673AB7"/>
+<rect x="233.7" y="282.7" width="25.3" height="30.8" fill="#512DA8"/>
+<rect x="262.0" y="291.8" width="25.3" height="21.6" fill="#00897B"/>
+<rect x="290.3" y="291.0" width="25.3" height="22.4" fill="#B39DDB"/>
+<rect x="318.7" y="300.1" width="25.3" height="13.3" fill="#3949AB"/>
+<text x="494.0" y="414.0" font-size="10" font-weight="400" text-anchor="middle" fill="#222">multiq=4</text>
+<rect x="368.0" y="219.7" width="25.3" height="93.7" fill="#2196F3"/>
+<rect x="396.3" y="313.4" width="25.3" height="3.3" fill="#5E35B1"/>
+<rect x="424.7" y="313.4" width="25.3" height="1.5" fill="#7E57C2"/>
+<rect x="453.0" y="313.4" width="25.3" height="1.2" fill="#9575CD"/>
+<rect x="481.3" y="313.4" width="25.3" height="0.2" fill="#673AB7"/>
+<rect x="509.7" y="267.3" width="25.3" height="46.1" fill="#512DA8"/>
+<rect x="538.0" y="313.4" width="25.3" height="3.1" fill="#00897B"/>
+<rect x="566.3" y="313.4" width="25.3" height="7.9" fill="#B39DDB"/>
+<rect x="594.7" y="313.4" width="25.3" height="18.7" fill="#3949AB"/>
+<text x="770.0" y="414.0" font-size="10" font-weight="400" text-anchor="middle" fill="#222">needle-128</text>
+<rect x="644.0" y="302.6" width="25.3" height="10.8" fill="#2196F3"/>
+<rect x="672.3" y="297.6" width="25.3" height="15.8" fill="#5E35B1"/>
+<rect x="700.7" y="296.8" width="25.3" height="16.6" fill="#7E57C2"/>
+<rect x="729.0" y="296.0" width="25.3" height="17.5" fill="#9575CD"/>
+<rect x="757.3" y="296.8" width="25.3" height="16.6" fill="#673AB7"/>
+<rect x="785.7" y="286.0" width="25.3" height="27.4" fill="#512DA8"/>
+<rect x="814.0" y="297.6" width="25.3" height="15.8" fill="#00897B"/>
+<rect x="842.3" y="300.1" width="25.3" height="13.3" fill="#B39DDB"/>
+<rect x="870.7" y="306.8" width="25.3" height="6.6" fill="#3949AB"/>
+<text x="1046.0" y="414.0" font-size="10" font-weight="400" text-anchor="middle" fill="#222">needle-32</text>
+<rect x="920.0" y="212.0" width="25.3" height="101.4" fill="#2196F3"/>
+<rect x="948.3" y="271.8" width="25.3" height="41.6" fill="#5E35B1"/>
+<rect x="976.7" y="271.8" width="25.3" height="41.6" fill="#7E57C2"/>
+<rect x="1005.0" y="271.0" width="25.3" height="42.4" fill="#9575CD"/>
+<rect x="1033.3" y="269.4" width="25.3" height="44.0" fill="#673AB7"/>
+<rect x="1061.7" y="306.8" width="25.3" height="6.6" fill="#512DA8"/>
+<rect x="1090.0" y="273.5" width="25.3" height="39.9" fill="#00897B"/>
+<rect x="1118.3" y="299.3" width="25.3" height="14.1" fill="#B39DDB"/>
+<rect x="1146.7" y="241.1" width="25.3" height="72.3" fill="#3949AB"/>
+<text x="1322.0" y="414.0" font-size="10" font-weight="400" text-anchor="middle" fill="#222">pairs=8</text>
+<rect x="1196.0" y="268.5" width="25.3" height="44.9" fill="#2196F3"/>
+<rect x="1224.3" y="313.4" width="25.3" height="5.8" fill="#5E35B1"/>
+<rect x="1252.7" y="313.4" width="25.3" height="5.0" fill="#7E57C2"/>
+<rect x="1281.0" y="313.4" width="25.3" height="3.3" fill="#9575CD"/>
+<rect x="1309.3" y="313.4" width="25.3" height="3.3" fill="#673AB7"/>
+<rect x="1337.7" y="296.8" width="25.3" height="16.6" fill="#512DA8"/>
+<rect x="1366.0" y="313.4" width="25.3" height="5.8" fill="#00897B"/>
+<rect x="1394.3" y="313.4" width="25.3" height="3.3" fill="#B39DDB"/>
+<rect x="1422.7" y="313.4" width="25.3" height="1.7" fill="#3949AB"/>
+<rect x="120.0" y="460.0" width="14.0" height="10.0" fill="#2196F3"/>
+<text x="140.0" y="470.0" font-size="10" font-weight="400" text-anchor="start" fill="#222">KeyNorm HPA</text>
+<rect x="270.0" y="460.0" width="14.0" height="10.0" fill="#5E35B1"/>
+<text x="290.0" y="470.0" font-size="10" font-weight="400" text-anchor="start" fill="#222">VanillaClip</text>
+<rect x="420.0" y="460.0" width="14.0" height="10.0" fill="#7E57C2"/>
+<text x="440.0" y="470.0" font-size="10" font-weight="400" text-anchor="start" fill="#222">PositiveMargin</text>
+<rect x="570.0" y="460.0" width="14.0" height="10.0" fill="#9575CD"/>
+<text x="590.0" y="470.0" font-size="10" font-weight="400" text-anchor="start" fill="#222">Softplus</text>
+<rect x="720.0" y="460.0" width="14.0" height="10.0" fill="#673AB7"/>
+<text x="740.0" y="470.0" font-size="10" font-weight="400" text-anchor="start" fill="#222">SoftplusMargin</text>
+<rect x="870.0" y="460.0" width="14.0" height="10.0" fill="#512DA8"/>
+<text x="890.0" y="470.0" font-size="10" font-weight="400" text-anchor="start" fill="#222">RMSNormResidual</text>
+<rect x="1020.0" y="460.0" width="14.0" height="10.0" fill="#00897B"/>
+<text x="1040.0" y="470.0" font-size="10" font-weight="400" text-anchor="start" fill="#222">ThresholdGate</text>
+<rect x="1170.0" y="460.0" width="14.0" height="10.0" fill="#B39DDB"/>
+<text x="1190.0" y="470.0" font-size="10" font-weight="400" text-anchor="start" fill="#222">ZeroInitBranch</text>
+<rect x="1320.0" y="460.0" width="14.0" height="10.0" fill="#3949AB"/>
+<text x="1340.0" y="470.0" font-size="10" font-weight="400" text-anchor="start" fill="#222">HeadSplitClip</text>
+</svg>
