@@ -630,7 +630,7 @@ The controls changed the conclusion. The correct claim is not “the exact proje
 ```bibtex
 @misc{li2026hpa,
   title   = {Hyperplane Projection Attention},
-  url     = {},
+  url     = {https://weakriver.github.io/#/post/hpa},
   author  = {Anthea Li},
   journal = {RuoShui},
   year    = {2026},
