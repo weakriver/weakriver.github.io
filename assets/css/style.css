@@ -476,8 +476,10 @@ main { padding-bottom: 96px; }
   margin: 0;
   border-radius: 0;
 }
-.prose .table-scroll > table > thead > tr > th:first-child,
-.prose .table-scroll > table > tbody > tr > td:first-child {
+/* Sticky first column — only opt in where it makes sense (e.g. a `#` index).
+   For posts whose first column is content/description, leave it normal. */
+.post-view[data-slug="philosophy-regression"] .table-scroll > table > thead > tr > th:first-child,
+.post-view[data-slug="philosophy-regression"] .table-scroll > table > tbody > tr > td:first-child {
   position: sticky;
   left: 0;
   background: var(--bg-elevated);
@@ -807,6 +809,60 @@ main { padding-bottom: 96px; }
   margin-right: calc((100% - min(1100px, calc(100vw - 48px))) / 2);
   border-radius: var(--radius);
   overflow: hidden;
+}
+
+/* Metaphysics post: 5-column comparison table (异 · 东方 · 同 · 西方 · 异).
+   The middle three columns are short labels and the bridge of similarity;
+   the outer two columns are long descriptions. Fits without horizontal
+   scrolling by using a fixed table layout with percentage column widths. */
+.post-view[data-slug="metaphysics"] .table-scroll {
+  width: min(1300px, calc(100vw - 32px));
+  margin-left: calc((100% - min(1300px, calc(100vw - 32px))) / 2);
+  margin-right: calc((100% - min(1300px, calc(100vw - 32px))) / 2);
+  overflow-x: hidden;          /* no horizontal scroll for this table */
+}
+.post-view[data-slug="metaphysics"] .table-scroll table {
+  width: 100%;                 /* fill the wrapper exactly */
+  min-width: 0;                /* override generic .table-scroll min-width: 100% */
+  table-layout: fixed;         /* honor the percentage column widths below */
+}
+.post-view[data-slug="metaphysics"] .table-scroll th,
+.post-view[data-slug="metaphysics"] .table-scroll td {
+  white-space: normal;
+  word-break: break-word;      /* let long Chinese strings break inside the cell */
+  overflow-wrap: anywhere;
+  vertical-align: top;
+  line-height: 1.75;
+  padding: 14px 16px;
+  font-size: 0.95rem;
+}
+.post-view[data-slug="metaphysics"] .table-scroll th:nth-child(1),
+.post-view[data-slug="metaphysics"] .table-scroll td:nth-child(1) { width: 28%; }
+.post-view[data-slug="metaphysics"] .table-scroll th:nth-child(2),
+.post-view[data-slug="metaphysics"] .table-scroll td:nth-child(2) {
+  width: 8%; text-align: center;
+  font-weight: 600; color: var(--accent); font-size: 1rem;
+}
+.post-view[data-slug="metaphysics"] .table-scroll th:nth-child(3),
+.post-view[data-slug="metaphysics"] .table-scroll td:nth-child(3) {
+  width: 28%; text-align: center; color: var(--text);
+}
+.post-view[data-slug="metaphysics"] .table-scroll th:nth-child(4),
+.post-view[data-slug="metaphysics"] .table-scroll td:nth-child(4) {
+  width: 8%; text-align: center;
+  font-weight: 600; color: var(--accent); font-size: 1rem;
+}
+.post-view[data-slug="metaphysics"] .table-scroll th:nth-child(5),
+.post-view[data-slug="metaphysics"] .table-scroll td:nth-child(5) { width: 28%; }
+
+/* On narrow screens, shrink padding + font so the table stays comfortable. */
+@media (max-width: 720px) {
+  .post-view[data-slug="metaphysics"] .table-scroll th,
+  .post-view[data-slug="metaphysics"] .table-scroll td {
+    padding: 8px 8px;
+    font-size: 0.85rem;
+    line-height: 1.6;
+  }
 }
 
 /* Metaphysics post: title carries a <br>, so the header needs room to
