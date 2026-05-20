@@ -375,7 +375,7 @@ The framework is not merely a metaphor. It is the literal geometry of what $q^\t
 ```bibtex
 @misc{li2026projectiveattn,
   title   = {Projective Attention: A Projective Geometry Framework for Attention Mechanism},
-  url     = {https://antheali.notion.site/eses},
+  url     = {https://weakriver.github.io/#/post/projective-attention},
   author  = {Anthea Li},
   journal = {RuoShui},
   year    = {2026},
