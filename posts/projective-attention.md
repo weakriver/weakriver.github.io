@@ -9,7 +9,7 @@ excerpt: A projective geometry perspective on attention mechanisms.
 
 ---
 
-Attention is a retrieval operation. A query searches over keys, obtains a distribution over tokens, and returns a weighted average of values. This picture is useful, but it is also a little too narrow. It makes the attention head look like a soft database lookup, where the main design questions are how to normalize the scores, how to sparsify the lookup, or how to make the computation cheaper.
+Attention is a retrieval operation. A query searches over keys, obtains a distribution over tokens, and returns a weighted average of values. This view looks at the attention head like a soft database lookup, where the main design questions are how to normalize the scores, how to sparsify the lookup, or how to make the computation cheaper.
 
 $$y_i = \sum_j \text{softmax}_j\!\left(\frac{q_i^\top k_j}{\sqrt{d_k}}\right) v_j$$
 
@@ -504,22 +504,22 @@ The hyperplane framework's specific contribution is the geometric language — "
 | Signed Attention | Activation $\phi$ | [Cog Attention (2024)](https://arxiv.org/abs/2411.07176), [Diff Transformer (2025)](https://arxiv.org/abs/2410.05258) | Unifies both as "exploit signed incidence"; proposes a simpler L1-normalized construction |
 | Sparsemax / Entmax | Activation $\phi$ | [Adaptively Sparse Transformers (EMNLP-IJCNLP 2019)](https://arxiv.org/abs/1909.00015) | Interprets sparse probability maps as selecting sparse faces of the hyperplane activation simplex |
 | Top-k / k-Winner | Activation $\phi$ | [Top-k Attention (2021)](https://arxiv.org/abs/2106.06899) | Frames top-k sparsity as hard local decoding from the most active hyperplanes |
-| Polytope (Hashed) | Hyperplanes / access | [Reformer (ICLR 2020)](https://arxiv.org/abs/2001.04451) | Reveals LSH = sign-pattern bucketing on the key hyperplane arrangement |
 | Normalization in Attention | Hyperplane gauge | [QKNorm (EMNLP 2020)](https://aclanthology.org/2020.findings-emnlp.379/) | Projective gauge-fixing interpretation — normalization eliminates a geometrically irrelevant degree of freedom |
-| Affine Bias / Offset Hyperplanes | Incidence geometry | [ALiBi (ICLR 2022)](https://arxiv.org/abs/2108.12409) | Recasts attention biases as translations of key-defined hyperplanes in homogeneous coordinates |
-| Bilinear / Learned-Metric | Incidence geometry | [Luong et al. (EMNLP 2015)](https://aclanthology.org/D15-1166/) | Shows learned Q/K projections as choosing the metric for incidence |
-| Polynomial / Kernel-Lifted | Incidence geometry | [Performer (ICLR 2021)](https://arxiv.org/abs/2009.14794), [PolySketchFormer (2023)](https://arxiv.org/abs/2310.01655) | Treats kernelized attention as hyperplane activation after a nonlinear feature lift |
+| Polytope (Hashed) | Hyperplanes / access | [Reformer (ICLR 2020)](https://arxiv.org/abs/2001.04451) | Reveals LSH = sign-pattern bucketing on the key hyperplane arrangement |
 | Routing / Clustered | Hyperplanes / access | [Routing Transformer (TACL 2021)](https://arxiv.org/abs/2003.05997) | Interprets routing as replacing the full arrangement with local sub-arrangements |
 | Anchor / Global-Memory | Hyperplane structure | [ETC (EMNLP 2020)](https://arxiv.org/abs/2004.08483), [AnchorFormer (2025)](https://arxiv.org/abs/2505.16463) | Mixes context-generated hyperplanes with persistent anchor hyperplanes |
 | Diversity-Regularized Hyperplanes | Hyperplane structure | [Diversity of Multi-Head Attention (2018)](https://arxiv.org/abs/1808.07597), [Repulsive Attention (2020)](https://arxiv.org/abs/2009.09364), [Principle of Diversity (CVPR 2022)](https://openaccess.thecvf.com/content/CVPR2022/html/Chen_The_Principle_of_Diversity_Training_Stronger_Vision_Transformers_Calls_for_CVPR_2022_paper.html) | Reframes diversity regularization as improving coverage of the hyperplane arrangement |
-| Exclusive Self Attention | Decoding pathway | [XSA (Zhai 2026)](https://arxiv.org/abs/2603.09078) | Frames output projection as the natural dual of key normalization — output-space gauge fixing, not just self-attention suppression |
-| Talking-Heads | Decoding / code mixing | [Talking-Heads Attention (2020)](https://arxiv.org/abs/2003.02436) | Interprets head mixing as communication between hyperplane activation codes |
-| Mixture of Attention Heads | Decoding / routing | [Mixture of Attention Heads (2022)](https://arxiv.org/abs/2210.05144) | Views token-wise head routing as choosing among multiple hyperplane atlases |
+| Affine Bias / Offset Hyperplanes | Incidence geometry | [ALiBi (ICLR 2022)](https://arxiv.org/abs/2108.12409) | Recasts attention biases as translations of key-defined hyperplanes in homogeneous coordinates |
+| Bilinear / Learned-Metric | Incidence geometry | [Luong et al. (EMNLP 2015)](https://aclanthology.org/D15-1166/) | Shows learned Q/K projections as choosing the metric for incidence |
+| Polynomial / Kernel-Lifted | Incidence geometry | [Performer (ICLR 2021)](https://arxiv.org/abs/2009.14794), [PolySketchFormer (2023)](https://arxiv.org/abs/2310.01655) | Treats kernelized attention as hyperplane activation after a nonlinear feature lift |
+| Exclusive Self Attention | Decoding | [XSA (Zhai 2026)](https://arxiv.org/abs/2603.09078) | Frames output projection as the natural dual of key normalization — output-space gauge fixing, not just self-attention suppression |
+| Talking-Heads | Decoding | [Talking-Heads Attention (2020)](https://arxiv.org/abs/2003.02436) | Interprets head mixing as communication between hyperplane activation codes |
+| Mixture of Attention Heads | Decoding | [Mixture of Attention Heads (2022)](https://arxiv.org/abs/2210.05144) | Views token-wise head routing as choosing among multiple hyperplane atlases |
 | Activation-Code | Cross-cutting | [Schlag et al. (ICML 2021)](https://arxiv.org/abs/2102.11174), [Tsai et al. (EMNLP 2019)](https://aclanthology.org/D19-1443/) | Connects to hyperplane arrangement theory and ReLU network expressivity |
 
-The pattern is consistent: the hyperplane framework generates these variants naturally from geometric first principles, but the ML community has already discovered each mechanism through empirical search, efficiency engineering, or kernel theory. The framework's value for these variants is not novelty of mechanism but novelty of explanation — it provides a unified geometric lens that connects mechanisms previously understood in isolation (ReLU attention, LSH attention, cosine attention, sparse activation, routing, and head mixing) as different choices along the same design axes.
+The hyperplane framework generates these variants naturally from geometric principles, but the ML community has already discovered each mechanism through empirical search, efficiency engineering, or kernel theory. The framework's value for these variants is new view of explanation — it provides a unified geometric lens that connects mechanisms previously understood in isolation (ReLU attention, LSH attention, cosine attention, sparse activation, routing, and head mixing) as different choices along the same design axes.
 
-The framework's genuine experimental novelty lies elsewhere: in the less-explored decoding variants (HPA, dual-code, projection features) and in the cross-cutting variants (margin-gated, two-sided hyperplane, conjugate pairs), where published precedents are either absent or structurally different. Those variants should receive the bulk of experimental compute.
+I will provide some new attention mechanism candidates under the framework's guidance, where published precedents are either absent or structurally different. Also provided, small scale tests reveals insteresting properties of these new mechanisms in following blogs.
 
 
 
@@ -565,7 +565,7 @@ The hyperplane activation view opens several directions.
 
 ### Finally
 
-Attention is not merely a soft lookup table. It is a token-conditioned hyperplane activation layer: a one-hidden-layer neural network whose hidden units, weight vectors, and output weights are all instantiated from the input data.
+This blog introduces a view of attention mechanism beyond a soft lookup table. It looks at attention as a token-conditioned hyperplane activation layer: a one-hidden-layer neural network whose hidden units, weight vectors, and output weights are all instantiated from the input data.
 
 Each key defines a hyperplane in query space. The dot product between query and key is a signed incidence score — which side of the hyperplane, and how far. Softmax converts the vector of incidence scores into an activation code: a probability distribution over tokens that encodes the query's position in the hyperplane arrangement. Values decode this activation code into the output.
 
