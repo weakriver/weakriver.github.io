@@ -548,7 +548,7 @@ I will provide some new attention mechanism candidates under the framework's gui
 
 ---
 
-### Looking back: Why This Framework Matters
+### Looking back: Why this Matters
 
 The hyperplane activation framework isn't just a reinterpretation — it generates concrete predictions and design insights.
 
