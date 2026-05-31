@@ -71,7 +71,7 @@ This reframing matters because it changes the design space. If attention is only
 - Should the model receive explicit projection features from the query's geometry relative to the key-planes?
 - Should violations of key-defined halfspaces produce vector-valued corrections?
 
-The rest of this note explores that design space.
+The rest of this note explores that design space. The central claim is not that attention is one fixed mechanism with a few implementation variants. It is that attention is a geometric design family. Standard scaled dot-product attention is the dense, smooth, simplex-normalized member of that family. ReLU, sigmoid, sparse, signed, routed, kernelized, normalized, and projection-based attentions are different choices about how to activate, normalize, access, and decode the same underlying incidence geometry.
 
 ### The Projective Geometry Framework
 
@@ -136,17 +136,13 @@ This is the main framework. Attention is not just retrieval, and it is not only 
 
 <div data-widget="projective-attention"></div>
 
-As I catalogue attention variants suggested by this framework, it turns out to have close or identical counterparts in the existing literature. The purpose is not to diminish these variants — the framework provides genuinely new geometric motivation for each.
+As I catalogue attention variants suggested by this framework, many of them turn out to have published predecessors or close neighbors in the existing literature. The purpose is not to diminish these variants — the framework provides a shared geometric language for mechanisms that were often discovered through separate empirical, theoretical, or systems motivations.
 
-The hyperplane-activation framework rewrites standard attention as
+The framework decomposes attention into three axes — activation \(\phi\), key/hyperplane structure, and decoding — each generating the variants that follow.
 
-$$f(q_i) = \sum_j v_j \, \phi(q_i^\top k_j)$$
-
-where each key $k_j$ defines a hyperplane $H_j = \{q : q^\top k_j = 0\}$, the dot product $q_i^\top k_j$ is a signed incidence score measuring which side of the hyperplane the query occupies, and $\phi$ is the activation function (softmax in the standard case). The framework decomposes attention into three independent design axes: the activation function $\phi$, the hyperplane structure (keys), and the decoding pathway (values). Each axis generates variants, many of which have published predecessors close enough to merit detailed comparison.
+The rest of this note catalogs how that geometry maps onto existing work and what it suggests that hasn't been tried.
 
 ---
-
-Now, let's see some examples 
 
 
 ### Axis 1: Activation Function $\phi$
@@ -162,13 +158,39 @@ Each key hyperplane becomes a binary gate: the query is either on the positive s
 In the hyperplane framework, this is the most literal realization of the "attention as activation" idea. The partition of query space becomes a set of convex polytopes defined by which subset of key hyperplanes the query activates — exactly the geometry of a one-hidden-layer ReLU network. Tokens on the positive side of a hyperplane contribute their value scaled by incidence magnitude; tokens on the negative side are gated off entirely. There is no competition between tokens (no softmax normalization), only independent half-space membership tests.
 
 
-> Wortsman, Lee, Gilmer, and Kornblith (Google DeepMind, 2023) proposed exactly this mechanism in ["Replacing Softmax with ReLU in Vision Transformers"](https://arxiv.org/abs/2309.08586) (arXiv:2309.08586). They systematically tested seven point-wise replacements for softmax — ReLU, squared ReLU, GELU, softplus, identity, ReLU6, and sigmoid — in Vision Transformers trained on ImageNet-21k, with sequence-length normalization $L^{-\alpha}$ for $\alpha \in [0, 1]$. Their central finding was that the $1/L$ scaling (i.e., $\alpha \approx 1$) is critical: without it, attention with these activations degrades because the expected weight magnitude grows with sequence length; with it, ReLU attention approaches or matches softmax scaling behavior as a function of compute. Their main experiments use qk-layernorm (LayerNorm applied to queries and keys before computing attention weights), though their ablation finds it doesn't make a large difference at the scales they tested.
+> Wortsman, Lee, Gilmer, and Kornblith (Google DeepMind, 2023) provide the clearest published predecessor for this mechanism in ["Replacing Softmax with ReLU in Vision Transformers"](https://arxiv.org/abs/2309.08586) (arXiv:2309.08586). They systematically tested seven point-wise replacements for softmax — ReLU, squared ReLU, GELU, softplus, identity, ReLU6, and sigmoid — in Vision Transformers trained on ImageNet-21k, with sequence-length normalization $L^{-\alpha}$ for $\alpha \in [0, 1]$. Their central finding was that the $1/L$ scaling (i.e., $\alpha \approx 1$) is critical: without it, attention with these activations degrades because the expected weight magnitude grows with sequence length; with it, ReLU attention approaches or matches softmax scaling behavior as a function of compute. Their main experiments use qk-layernorm (LayerNorm applied to queries and keys before computing attention weights), though their ablation finds it doesn't make a large difference at the scales they tested.
 
 > The hyperplane framework explains *why* $1/T$ works: it keeps the expected activation per hidden unit at $O(1)$ as the "network width" (sequence length) grows, the standard initialization condition for stable signal propagation in ReLU networks. This is a clean geometric motivation that the original paper did not provide — Wortsman et al. discovered the normalization empirically.
 
 > A deeper theoretical connection comes from Lai, Lim, and Liu (2024), ["Attention is a Smoothed Cubic Spline"](https://arxiv.org/abs/2408.09624) (arXiv:2408.09624). They prove that ReLU attention computes a piecewise cubic polynomial whose breakpoints are determined by a hyperplane arrangement in query space — precisely the polytope structure the framework describes. Standard softmax attention is *a* $C^\infty$ smoothing of this piecewise function (the paper explicitly cautions that softmax is one such smooth replacement, not the canonical one, and notes that ReLU may be an equally good or better choice). This paper provides the formal mathematical grounding for the claim that "softmax is one smooth activation; ReLU is the piecewise-linear one."
 
-**Verdict: identical mechanism.** The framework adds geometric motivation and connects to the spline theory, but the attention formula, normalization, and empirical behavior are fully characterized in Wortsman et al. 2023.
+**Verdict: published predecessor.** The framework adds geometric motivation and connects to the spline theory, but the attention formula, normalization, and empirical behavior are largely characterized in Wortsman et al. 2023.
+
+---
+
+- **Sigmoid Self-Attention**
+
+$$
+f(q_i) =
+\sum_{j=1}^{T}
+v_j \cdot \sigma(q_i^\top k_j)
+$$
+
+or, in normalized form,
+
+$$
+f(q_i) =
+\frac{\sum_j v_j \cdot \sigma(q_i^\top k_j)}
+{\sum_j \sigma(q_i^\top k_j) + \epsilon}.
+$$
+
+Sigmoid attention replaces the competitive softmax row with independent bounded gates. Each key-hyperplane now contributes a halfspace-like gate: a query far on the positive side opens the gate, a query far on the negative side closes it, and the transition region near the hyperplane remains smooth. Unlike ReLU attention, the contribution is bounded; unlike softmax attention, one token does not need to suppress another for both to be active.
+
+This is important for the framework because it shows that the attention activation need not be a probability distribution to be useful. The geometric object is the same vector of signed incidences. What changes is the activation rule: softmax turns incidences into a competitive simplex code, ReLU turns them into unbounded halfspace activations, and sigmoid turns them into independent bounded gates. The main practical lesson is the same as ReLU attention: once softmax is removed, normalization and initialization become the difference between an interesting mechanism and an unstable one.
+
+> Ramapuram et al. (2024) revisit this direction in ["Theory, Analysis, and Best Practices for Sigmoid Self-Attention"](https://arxiv.org/abs/2409.04431) (arXiv:2409.04431). They argue that earlier sigmoid-attention attempts struggled mainly because of poor normalization and unstable early attention norms, and show that properly normalized sigmoid attention can match softmax attention across language, vision, and speech settings. They also introduce FlashSigmoid, a hardware-aware implementation that reports faster inference kernels than FlashAttention2 on H100 GPUs.
+
+**Verdict: published predecessor.** Sigmoid attention is not the same design point as ReLU or softmax; it occupies the independent-gating corner of the activation axis. It is a useful proof that the hyperplane activation view is broader than probability-normalized retrieval.
 
 ---
 
@@ -186,13 +208,13 @@ where $\tau_h$ is a learnable per-head scalar and $\tau(q_i)$ is a small functio
 
 In the hyperplane framework, the temperature controls the sharpness of the activation code's discrimination between hyperplane regions. Low temperature (high $\tau$) makes each hyperplane boundary a near-binary decision — the query is clearly on one side or the other. High temperature (low $\tau$) produces smooth blending across regions. The insight is that different heads may need different partition granularities: some heads perform precise retrieval (sharp boundaries), while others aggregate broad context (smooth blending). Making temperature query-dependent goes further — the same head can be sharp for some inputs and smooth for others.
 
-> Zhang, Chang, Li, Roy-Chowdhury, Chen, and Oymak (NeurIPS 2024) proposed precisely the per-query adaptive temperature in ["Selective Attention: Enhancing Transformer through Principled Context Control"](https://arxiv.org/abs/2411.12892) (arXiv:2411.12892), where the layer they introduce is called Selective Self-Attention (SSA). SSA adds a learnable inverse-temperature function $\tau(q)$ applied to each query before softmax. Their key contribution is explicitly decoupling "semantic similarity" (what the QK dot product measures) from "contextual sparsity" (how sharply the model focuses), arguing these are independent design goals that standard $1/\sqrt{d_k}$ scaling conflates. SSA adds fewer than 0.5% extra parameters via weight sharing and shows consistent improvements on language modeling benchmarks up to 1.3B parameters.
+> Zhang, Chang, Li, Roy-Chowdhury, Chen, and Oymak (NeurIPS 2024) published the closest per-query adaptive-temperature version in ["Selective Attention: Enhancing Transformer through Principled Context Control"](https://arxiv.org/abs/2411.12892) (arXiv:2411.12892), where the layer they introduce is called Selective Self-Attention (SSA). SSA adds a learnable inverse-temperature function $\tau(q)$ applied to each query before softmax. Their key contribution is explicitly decoupling "semantic similarity" (what the QK dot product measures) from "contextual sparsity" (how sharply the model focuses), arguing these are independent design goals that standard $1/\sqrt{d_k}$ scaling conflates. SSA adds fewer than 0.5% extra parameters via weight sharing and shows consistent improvements on language modeling benchmarks up to 1.3B parameters.
 
 > The per-head (non-query-dependent) version has an even older precedent in Henry, Dachapally, Pawar, and Chen (Findings of EMNLP 2020), ["Query-Key Normalization for Transformers"](https://aclanthology.org/2020.findings-emnlp.379/) (QKNorm). QKNorm replaces the fixed $1/\sqrt{d_k}$ scaling with a learnable per-head scalar $\gamma$ after $\ell_2$-normalizing both queries and keys. This is mathematically equivalent to a per-head learnable temperature applied to cosine similarity. The normalization step constrains the hyperplane geometry to the unit sphere, and the learned $\gamma$ controls how sharply the model discriminates along angular distance.
 
 The hyperplane framework's contribution here is the *geometric explanation*: temperature controls partition smoothness, and different heads learning different temperatures corresponds to the model learning a mixture of coarse-grained and fine-grained hyperplane arrangements. SSA's "decoupling similarity from sparsity" is a special case of this broader geometric claim. But the mechanism itself — learnable temperature, either per-head or per-query — is fully published.
 
-**Verdict: identical mechanism.** SSA implements the per-query version exactly. QKNorm implements the per-head version. The hyperplane partition-smoothness interpretation is new.
+**Verdict: published predecessors.** SSA implements the per-query version, and QKNorm implements the per-head version. The hyperplane partition-smoothness interpretation is the new contribution of this framework.
 
 ---
 
@@ -229,7 +251,7 @@ In the hyperplane framework, this means the query activates only a subset of the
 
 > Correia, Niculae, and Martins proposed this direction in ["Adaptively Sparse Transformers"](https://arxiv.org/abs/1909.00015) (EMNLP-IJCNLP 2019). They replace softmax attention with sparse transformations such as entmax, allowing individual heads to learn attention distributions with exact zeros while keeping the probabilistic row-sum constraint.
 
-**Verdict: identical mechanism under a different activation.** Entmax changes the activation-code geometry from a dense simplex interior to sparse simplex faces. The projective interpretation is that attention selects a sparse face of the hyperplane arrangement's activation code.
+**Verdict: published predecessor under a different activation.** Entmax changes the activation-code geometry from a dense simplex interior to sparse simplex faces. The projective interpretation is that attention selects a sparse face of the hyperplane arrangement's activation code.
 
 ---
 
@@ -247,7 +269,7 @@ The full hyperplane arrangement still exists, but the query decodes only from th
 
 > Gupta, Berant, and Qiu explored this family in ["Memory-efficient Transformers via Top-k Attention"](https://arxiv.org/abs/2106.06899) (2021), where only the top-scoring key-value pairs are retained for each query to reduce memory usage while preserving much of the behavior of full attention.
 
-**Verdict: identical mechanism as hard sparse activation.** Top-k attention is hard local decoding from the most active hyperplanes.
+**Verdict: published predecessor as hard sparse activation.** Top-k attention is hard local decoding from the most active hyperplanes.
 
 ---
 
@@ -264,13 +286,13 @@ Queries with the same binary sign pattern $h(q_i) \in \{-1, +1\}^T$ occupy the s
 In the framework's language, standard attention computes the full activation code (a continuous vector of incidence scores) and then decodes it through softmax + values. Polytope attention binarizes the activation code to a sign pattern and groups queries by code identity. Two queries in the same polytope — on the same side of every hyperplane — are treated as having the same activation and should produce similar outputs. This is a discrete approximation of the continuous activation code.
 
 
-> Kitaev, Kaiser, and Levskaya (ICLR 2020) proposed exactly this idea in ["Reformer: The Efficient Transformer"](https://arxiv.org/abs/2001.04451) (arXiv:2001.04451). Reformer uses locality-sensitive hashing (LSH) to bucket query-key vectors (with shared Q=K projections) and restricts attention to within-bucket pairs. The specific LSH scheme is based on random hyperplane projections (Charikar-style): project the query onto $r$ random directions, take the sign of each projection, and use the resulting binary string as the hash code.
+> Kitaev, Kaiser, and Levskaya (ICLR 2020) published the closest major predecessor on this axis in ["Reformer: The Efficient Transformer"](https://arxiv.org/abs/2001.04451) (arXiv:2001.04451). Reformer uses locality-sensitive hashing (LSH) to bucket query-key vectors (with shared Q=K projections) and restricts attention to within-bucket pairs. The specific LSH scheme is based on random hyperplane projections (Charikar-style): project the query onto $r$ random directions, take the sign of each projection, and use the resulting binary string as the hash code.
 
-> The hyperplane framework reveals that Reformer's LSH is literally a random sampling of hyperplanes from the key arrangement plus sign-pattern bucketing. The hash function $h(q) = \text{sign}(Rq)$ where $R$ is a random projection matrix defines a random hyperplane arrangement, and tokens are grouped by which polytope they fall in. The only structural difference is that Reformer uses *random* hyperplanes (for computational efficiency), while the framework's formulation uses the *data-dependent* key hyperplanes themselves. Using the actual key hyperplanes would give a more semantically meaningful partition but would be harder to compute efficiently (you'd need to hash with respect to a changing set of keys at each layer).
+> The hyperplane framework lets us read Reformer's LSH as sign-pattern bucketing in a random hyperplane arrangement. The hash function $h(q) = \text{sign}(Rq)$ where $R$ is a random projection matrix defines a random arrangement, and tokens are grouped by which polytope they fall in. This is related to, but not identical with, a data-dependent key-hyperplane formulation. Reformer uses random hyperplanes for computational efficiency; the projective framework asks what happens when the hyperplanes are the learned keys themselves.
 
 > Performer (Choromanski et al., ICLR 2021, ["Rethinking Attention with Performers"](https://arxiv.org/abs/2009.14794)) takes a related but different approach: instead of bucketing by sign pattern, it approximates the softmax kernel via positive orthogonal random features (FAVOR+), enabling linear-time attention. This is a kernel approximation rather than a polytope partition, so the connection to the hyperplane framework is looser — Performer approximates the activation function $\phi$ rather than discretizing the hyperplane arrangement.
 
-**Verdict: identical mechanism.** The framework provides the geometric explanation (polytope membership = hash code), but the algorithm is Reformer's LSH attention. The data-dependent-key variant is a conceptual extension not explored in Reformer, but it is an implementation detail, not a new mechanism.
+**Verdict: related published axis.** Reformer is not identical to the key-hyperplane formulation; it occupies the same hyperplane-access axis by using coarse sign-pattern regions to decide where attention is evaluated. Performer is adjacent but distinct: it is better understood as a kernel/activation approximation rather than a polytope-bucketing mechanism.
 
 
 
@@ -282,11 +304,11 @@ $$\hat{q}_i = \frac{q_i}{\|q_i\|}, \quad \hat{k}_j = \frac{k_j}{\|k_j\|}, \quad 
 
 A key hyperplane is defined only by its normal direction, not its scale: $\{q : q^\top k_j = 0\}$ and $\{q : q^\top (ck_j) = 0\}$ are the same hyperplane for any $c \neq 0$. Yet in raw dot-product attention $q^\top(ck_j) = c(q^\top k_j)$, so scaling a key shifts the logits and the softmax distribution — even though the underlying hyperplane hasn't changed. Projective attention fixes this by $\ell_2$-normalizing both queries and keys, choosing a canonical representative for each hyperplane normal. The incidence score becomes a pure angular measurement, and a learned scalar $\tau$ controls sharpness independently.
 
-> Henry, Dachapally, Pawar, and Chen (Findings of EMNLP 2020) proposed essentially the same mechanism in ["Query-Key Normalization for Transformers" (QKNorm)](https://aclanthology.org/2020.findings-emnlp.379/). Their formulation: $\ell_2$-normalize both queries and keys along the head dimension, then scale by a learnable per-head scalar $\gamma$ instead of the fixed $1/\sqrt{d_k}$. Mathematically, this is $\text{softmax}(\gamma \cdot \hat{q}^\top \hat{k})$, which is identical to projective attention with $\tau = \gamma$. They report improved training stability and modest perplexity gains, particularly at larger depths where unnormalized attention scores can grow large.
+> Henry, Dachapally, Pawar, and Chen (Findings of EMNLP 2020) proposed the direct published predecessor in ["Query-Key Normalization for Transformers" (QKNorm)](https://aclanthology.org/2020.findings-emnlp.379/). Their formulation: $\ell_2$-normalize both queries and keys along the head dimension, then scale by a learnable per-head scalar $\gamma$ instead of the fixed $1/\sqrt{d_k}$. Mathematically, this is $\text{softmax}(\gamma \cdot \hat{q}^\top \hat{k})$, which is the same formula as projective attention with $\tau = \gamma$. They report improved training stability and modest perplexity gains, particularly at larger depths where unnormalized attention scores can grow large.
 
 The hyperplane framework's contribution is the *projective geometry* language: the reason normalization helps is gauge fixing, not just training stability. This is a conceptual sharpening of an existing observation, not a new mechanism.
 
-**Verdict: identical mechanism.** QKNorm is the same formula. The "projective gauge" interpretation is novel framing.
+**Verdict: published predecessor with the same formula.** QKNorm supplies the computation; the "projective gauge" interpretation supplies a geometric reason for why separating direction from scale is natural.
 
 
 ---
@@ -379,7 +401,7 @@ In the hyperplane view, this approximates the full arrangement by first assignin
 
 > Roy, Saffar, Vaswani, and Grangier proposed this style of content-based sparse attention in ["Efficient Content-Based Sparse Attention with Routing Transformers"](https://arxiv.org/abs/2003.05997) (TACL 2021). Their Routing Transformer uses online k-means clustering to restrict attention to tokens assigned to the same cluster.
 
-**Verdict: published mechanism.** Routing attention is a computational approximation to full hyperplane activation, replacing the full arrangement with local sub-arrangements.
+**Verdict: related published axis.** Routing attention is not the same as evaluating a key-defined hyperplane arrangement directly. It is a computational strategy for replacing the full arrangement with local sub-arrangements selected by content.
 
 ---
 
@@ -435,9 +457,9 @@ $$P_{v_i}^\perp = I - \frac{v_i v_i^\top}{\|v_i\|^2}.$$
 
 Then $z_i = P_{v_i}^\perp\, y_i$. This is a data-dependent projection: the hyperplane being projected onto is defined by the token's own value vector, and that vector changes with every input. XSA is therefore a decoding-axis complement to projective attention's key-axis gauge fixing — both eliminate a direction that the framework identifies as geometrically redundant.
 
-> Zhai (2026) proposed this mechanism in ["Exclusive Self Attention"](https://arxiv.org/abs/2603.09078) (arXiv:2603.09078). The motivation in the paper is empirical: analysis of trained language models shows that the attention output $y_i$ and the self-value $v_i$ tend to have high cosine similarity across layers and model sizes, meaning the attention head is partially "wasting" its output capacity by re-encoding what the token already knows. Removing this component — without any additional learned parameters — consistently improves language modeling performance across model sizes up to 2.7B parameters, with gains that grow with sequence length.
+> Zhai (2026) proposed this decoding-side operation in ["Exclusive Self Attention"](https://arxiv.org/abs/2603.09078) (arXiv:2603.09078). The motivation in the paper is empirical: analysis of trained language models shows that the attention output $y_i$ and the self-value $v_i$ tend to have high cosine similarity across layers and model sizes, meaning the attention head is partially "wasting" its output capacity by re-encoding what the token already knows. Removing this component — without any additional learned parameters — consistently improves language modeling performance across model sizes up to 2.7B parameters, with gains that grow with sequence length.
 
-**Verdict: identical mechanism.** XSA implements exactly the formula above. The hyperplane framework reframes the operation as an output-space gauge fixing that is the natural dual of key normalization in projective attention — a conceptual sharpening, not a new computation.
+**Verdict: related decoding-axis predecessor.** XSA is not a key-hyperplane attention variant. It sits on the output/decoding axis: after the activation code has already been decoded into $y_i$, XSA projects away the self-value direction. The framework reframes this as output-space gauge fixing, the natural dual of key normalization.
 
 ---
 
@@ -493,19 +515,20 @@ This reframing has no computational implications (it changes no operations), but
 
 The hyperplane framework's specific contribution is the geometric language — "activation code" relative to a "hyperplane arrangement" — which connects attention to the rich theory of hyperplane arrangements, piecewise-linear functions, and ReLU network expressivity. This connection was made rigorous by Lai, Lim, and Liu (2024) in the [cubic spline paper](https://arxiv.org/abs/2408.09624). But as a computational mechanism, activation-code attention is standard attention with a new name.
 
-**Verdict: identical mechanism (reframing only).** The activation-code view is implicit in Schlag et al. 2021 and Tsai et al. 2019. No implementation change is needed; the value is conceptual.
+**Verdict: conceptual predecessor / reframing.** The activation-code view is implicit in Schlag et al. 2021 and Tsai et al. 2019. No implementation change is needed; the value is conceptual.
 
 ---
 
-| Variant | Axis | Published Equivalent | What the Framework Adds |
+| Variant | Axis | Published Predecessor / Related Work | What the Framework Adds |
 |---|---|---|---|
 | Hard Halfspace (ReLU) | Activation $\phi$ | [Wortsman et al. 2023](https://arxiv.org/abs/2309.08586) | Geometric explanation for why $1/T$ normalization works (stable signal propagation in the hyperplane arrangement) |
+| Sigmoid Self-Attention | Activation $\phi$ | [Ramapuram et al. 2024](https://arxiv.org/abs/2409.04431) | Frames sigmoid as independent bounded halfspace gating, distinct from softmax's competitive simplex code |
 | Adaptive Temperature | Activation $\phi$ | [SSA (NeurIPS 2024)](https://arxiv.org/abs/2411.12892), [QKNorm (EMNLP 2020)](https://aclanthology.org/2020.findings-emnlp.379/) | Partition-smoothness interpretation — temperature controls hyperplane boundary sharpness per head |
 | Signed Attention | Activation $\phi$ | [Cog Attention (2024)](https://arxiv.org/abs/2411.07176), [Diff Transformer (2025)](https://arxiv.org/abs/2410.05258) | Unifies both as "exploit signed incidence"; proposes a simpler L1-normalized construction |
 | Sparsemax / Entmax | Activation $\phi$ | [Adaptively Sparse Transformers (EMNLP-IJCNLP 2019)](https://arxiv.org/abs/1909.00015) | Interprets sparse probability maps as selecting sparse faces of the hyperplane activation simplex |
 | Top-k / k-Winner | Activation $\phi$ | [Top-k Attention (2021)](https://arxiv.org/abs/2106.06899) | Frames top-k sparsity as hard local decoding from the most active hyperplanes |
 | Normalization in Attention | Hyperplane gauge | [QKNorm (EMNLP 2020)](https://aclanthology.org/2020.findings-emnlp.379/) | Projective gauge-fixing interpretation — normalization eliminates a geometrically irrelevant degree of freedom |
-| Polytope (Hashed) | Hyperplanes / access | [Reformer (ICLR 2020)](https://arxiv.org/abs/2001.04451) | Reveals LSH = sign-pattern bucketing on the key hyperplane arrangement |
+| Polytope (Hashed) | Hyperplanes / access | [Reformer (ICLR 2020)](https://arxiv.org/abs/2001.04451) | Reveals LSH as sign-pattern bucketing in a hyperplane arrangement; the projective version asks what changes when those hyperplanes are learned keys |
 | Routing / Clustered | Hyperplanes / access | [Routing Transformer (TACL 2021)](https://arxiv.org/abs/2003.05997) | Interprets routing as replacing the full arrangement with local sub-arrangements |
 | Anchor / Global-Memory | Hyperplane structure | [ETC (EMNLP 2020)](https://arxiv.org/abs/2004.08483), [AnchorFormer (2025)](https://arxiv.org/abs/2505.16463) | Mixes context-generated hyperplanes with persistent anchor hyperplanes |
 | Diversity-Regularized Hyperplanes | Hyperplane structure | [Diversity of Multi-Head Attention (2018)](https://arxiv.org/abs/1808.07597), [Repulsive Attention (2020)](https://arxiv.org/abs/2009.09364), [Principle of Diversity (CVPR 2022)](https://openaccess.thecvf.com/content/CVPR2022/html/Chen_The_Principle_of_Diversity_Training_Stronger_Vision_Transformers_Calls_for_CVPR_2022_paper.html) | Reframes diversity regularization as improving coverage of the hyperplane arrangement |
@@ -517,7 +540,7 @@ The hyperplane framework's specific contribution is the geometric language — "
 | Mixture of Attention Heads | Decoding | [Mixture of Attention Heads (2022)](https://arxiv.org/abs/2210.05144) | Views token-wise head routing as choosing among multiple hyperplane atlases |
 | Activation-Code | Cross-cutting | [Schlag et al. (ICML 2021)](https://arxiv.org/abs/2102.11174), [Tsai et al. (EMNLP 2019)](https://aclanthology.org/D19-1443/) | Connects to hyperplane arrangement theory and ReLU network expressivity |
 
-The hyperplane framework generates these variants naturally from geometric principles, but the ML community has already discovered each mechanism through empirical search, efficiency engineering, or kernel theory. The framework's value for these variants is new view of explanation — it provides a unified geometric lens that connects mechanisms previously understood in isolation (ReLU attention, LSH attention, cosine attention, sparse activation, routing, and head mixing) as different choices along the same design axes.
+The hyperplane framework generates these variants naturally from geometric principles, but the ML community has already discovered many of the useful design points through empirical search, efficiency engineering, or kernel theory. The important point is not that these mechanisms are all the same. They are not. The point is that attention is a geometric design family: each variant chooses how to build, activate, sparsify, route, normalize, or decode a context-generated hyperplane arrangement.
 
 I will provide some new attention mechanism candidates under the framework's guidance, where published precedents are either absent or structurally different. Also provided, small scale tests reveals insteresting properties of these new mechanisms in following blogs.
 
@@ -525,11 +548,11 @@ I will provide some new attention mechanism candidates under the framework's gui
 
 ---
 
-<!-- ## Why This Framework Matters
+### Looking back: Why This Framework Matters
 
 The hyperplane activation framework isn't just a reinterpretation — it generates concrete predictions and design insights.
 
-### Attention patterns are hyperplane arrangements, not similarity matrices
+### Attention patterns are hyperplane arrangements
 
 The standard narrative says attention computes "similarity" between queries and keys. The hyperplane view says attention computes the query's position relative to a set of data-dependent decision boundaries. These are different mental models with different implications.
 
@@ -545,9 +568,9 @@ This gives a geometric explanation for why attention scales well with context le
 
 The scaling factor $1/\sqrt{d_k}$ in attention controls the "temperature" of the activation function. Low temperature (small scale) makes softmax sharper, pushing toward hard halfspace assignments — the activation code becomes more like a binary sign pattern. High temperature makes softmax flatter, blending activations across many hyperplanes.
 
-In ReLU networks, the sharpness of the activation is fixed (it's a hard threshold). In attention, it's a design choice. This connects to findings on attention entropy: well-trained models develop heads with both sharp and diffuse attention patterns — corresponding to heads that need precise hyperplane discrimination and heads that need smooth blending. -->
+In ReLU networks, the sharpness of the activation is fixed (it's a hard threshold). In attention, it's a design choice. This connects to findings on attention entropy: well-trained models develop heads with both sharp and diffuse attention patterns — corresponding to heads that need precise hyperplane discrimination and heads that need smooth blending.
 
-
+---
 
 ### Looking Forward: What the Framework Suggests
 

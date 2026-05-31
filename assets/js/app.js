@@ -29,9 +29,9 @@ function parseFrontmatter(raw) {
     let val = line.slice(idx + 1).trim();
     if (!key) continue;
 
-    if (key === "tags") {
+    if (key === "tags" || key === "related") {
       if (val.startsWith("[") && val.endsWith("]")) val = val.slice(1, -1);
-      meta.tags = val
+      meta[key] = val
         .split(/[,，]/)
         .map((t) => t.trim().replace(/^['"]|['"]$/g, ""))
         .filter(Boolean);
@@ -272,6 +272,36 @@ function autoExcerpt(post) {
   return stripped.length > max ? stripped.slice(0, max) + "…" : stripped;
 }
 
+/* ---------- Related-posts section ---------- */
+// A post's frontmatter may include `related: [slug1, slug2, ...]`.
+// We resolve each slug to the actual post (title + date + lang) so the
+// titles stay in sync automatically.
+function renderRelatedHtml(post, allPosts) {
+  const slugs = post.related || [];
+  if (!slugs.length) return "";
+  const items = slugs
+    .map((s) => allPosts.find((p) => p.slug === s))
+    .filter(Boolean);
+  if (!items.length) return "";
+
+  const label = post.lang === "en" ? "Related reading" : "相关文章";
+  const lis = items
+    .map((p) => `
+      <li class="post-related-item">
+        <a class="post-related-link" data-lang="${p.lang}" href="#/post/${encodeURIComponent(p.slug)}">
+          <span class="post-related-link-title">${escapeHtml(titleAsText(p.title))}</span>
+          <span class="post-related-link-meta">${escapeHtml(formatDate(p.date, p.lang))}</span>
+        </a>
+      </li>`)
+    .join("");
+
+  return `
+    <aside class="post-related" aria-label="${escapeHtml(label)}">
+      <h3 class="post-related-title">${escapeHtml(label)}</h3>
+      <ul class="post-related-list">${lis}</ul>
+    </aside>`;
+}
+
 /* ---------- Table scroll wrapping ---------- */
 // Wide markdown tables overflow the prose column awkwardly. Wrap every
 // rendered <table> in a horizontally-scrollable container so it can spill
@@ -448,6 +478,16 @@ async function renderPost(slug) {
   rewriteImageSources(contentEl, slug);
   wrapTables(contentEl);
   mountWidgets(contentEl);
+
+  // Replace any previous related-section before inserting a fresh one
+  const oldRelated = view.querySelector(".post-related");
+  if (oldRelated) oldRelated.remove();
+  const relatedHtml = renderRelatedHtml(post, posts);
+  if (relatedHtml) {
+    const postFooter = view.querySelector(".post-footer");
+    if (postFooter) postFooter.insertAdjacentHTML("beforebegin", relatedHtml);
+    else contentEl.insertAdjacentHTML("afterend", relatedHtml);
+  }
 
   document.title = `${titleAsText(post.title)} · 弱水`;
   window.scrollTo({ top: 0, behavior: "instant" in window ? "instant" : "auto" });

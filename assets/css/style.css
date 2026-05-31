@@ -646,6 +646,74 @@ main { padding-bottom: 96px; }
 .prose .katex .mclose { color: inherit; }
 
 /* ============================================
+   Related posts (auto-rendered from frontmatter)
+   ============================================ */
+.post-related {
+  max-width: var(--content-width);
+  margin: 4em auto 0;
+  padding-top: 28px;
+  border-top: 1px solid var(--border);
+}
+.post-view[data-lang="en"] .post-related {
+  max-width: var(--content-width-wide);
+}
+.post-related-title {
+  font-family: var(--font-zh-sans);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin: 0 0 18px;
+}
+.post-view[data-lang="en"] .post-related-title {
+  font-family: var(--font-en-sans);
+  letter-spacing: 0.16em;
+}
+.post-related-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 12px;
+}
+.post-related-item {
+  border-top: 1px solid var(--border);
+}
+.post-related-link {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 4px;
+  text-decoration: none;
+  color: inherit;
+  transition: opacity var(--transition);
+}
+.post-related-link:hover { opacity: 0.72; }
+.post-related-link-title {
+  font-family: var(--font-zh-serif);
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.4;
+}
+.post-related-link[data-lang="en"] .post-related-link-title {
+  font-family: var(--font-en-serif);
+  letter-spacing: -0.005em;
+}
+.post-related-link-meta {
+  flex-shrink: 0;
+  font-family: var(--font-zh-sans);
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+}
+.post-related-link[data-lang="en"] .post-related-link-meta {
+  font-family: var(--font-en-sans);
+}
+
+/* ============================================
    Interactive widgets — Projective-Attention
    ============================================ */
 .pa-widget {
