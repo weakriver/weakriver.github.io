@@ -3,6 +3,7 @@ title: Hyperplane Projection Attention
 date: 2026-05-15
 tags: [好玩的]
 excerpt: Attention as Hyperplane Projections 
+related: [hello, projective-attention]
 ---
 
 *A geometric derivation of Hyperplane-Projection Attention, what the experiments actually support, and where the mechanism is still unresolved.*
@@ -150,6 +151,10 @@ $$
 The coefficient comes from the query-key address match. So the correction should be interpreted as subtracting a query-conditioned address component, not as projecting the value itself.
 
 This is also why the geometry is most natural when the key and value coordinates are treated as living in a shared head space. If the key space and value space become completely unrelated, subtracting a key-normal vector from a value vector becomes less geometrically meaningful. That concern motivated the later basis and control experiments.
+
+<div data-widget="hpa-geometry"></div>
+
+*Drag the query **q**, any key **kⱼ**, or any value **vⱼ**. The dashed ghost along each kⱼ is the address shadow cⱼ·kⱼ that HPA subtracts from vⱼ. The white **y** is standard attention; the orange dashed **z** is the HPA output. Toggle KeyNorm to see how unit-length keys stabilise the shadow magnitudes.*
 
 #### Why Pre-Aggregation Matters
 
