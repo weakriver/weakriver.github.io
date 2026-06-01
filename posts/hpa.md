@@ -54,9 +54,7 @@ This suggests a natural question:
 
 That is the core idea behind Hyperplane-Projection Attention, or HPA.
 
-The important phrase is **address-like part**. A previous version of this argument said HPA “projects each value onto the hyperplane defined by its key.” That is too strong, and mathematically not quite right. The actual HPA correction uses $q_i^\top k_j$, not $v_j^\top k_j$. So it is not literally the orthogonal projection of $v_j$.
-
-A more accurate description is:
+The important phrase is **address-like part**. HPA uses $q_i^\top k_j$, not $v_j^\top k_j$. 
 
 > HPA subtracts a query-conditioned key-normal correction from the value readout. It removes the *address shadow* induced by the query-key match.
 
@@ -132,17 +130,7 @@ $$
 \frac{q_i^\top k_j}{\|k_j\|^2}
 $$
 
-is the signed coordinate of the query along the key normal. HPA uses that coordinate to subtract a key-normal vector from the value readout.
-
-Again, this is not literally:
-
-$$
-v_j - \frac{v_j^\top k_j}{\|k_j\|^2}k_j.
-$$
-
-That would be the orthogonal projection of the value vector $v_j$ onto the hyperplane normal to $k_j$.
-
-Instead, HPA is:
+is the signed coordinate of the query along the key normal. HPA uses that coordinate to subtract a key-normal vector from the value readout. HPA is:
 
 $$
 v_j - \frac{q_i^\top k_j}{\|k_j\|^2}k_j.
@@ -183,7 +171,7 @@ $$
 (\alpha \odot QK^\top)K.
 $$
 
-This is roughly another $T \times T \times d_k$ multiplication on top of the standard $\alpha V$ readout. In small local timing runs, vanilla HPA was about $1.6$-$1.7\times$ the cost of standard attention. At sequence length $1024$ on CPU, standard attention took about `7.52 ms` per forward pass, while vanilla HPA took about `13.16 ms`.
+This is roughly another $T \times T \times d_k$ multiplication on top of the standard $\alpha V$ readout. In small local timing runs, vanilla HPA was about $1.6$-$1.7\times$ the cost of standard attention. *(At sequence length of 1024 on CPU, standard attention took about `7.52 ms` per forward pass, while vanilla HPA took about `13.16 ms`.)*
 
 So the question is not only whether HPA works. It is whether the effect is strong enough to justify the extra correction branch.
 
@@ -240,7 +228,11 @@ The two mechanisms differ in the projection direction:
 
 Our direction analysis found that $\bar{k}_i$ and $v_i$ are not generally the same direction. Their mean cosine was close to zero in the small trained model we tested. So post-agg HPA and XSA are not equivalent.
 
-![Cosine similarity between the attention-weighted average key $\bar{k}_i$ and the self-value direction $v_i$, measured per position and head. The two correction axes are nearly orthogonal, so post-agg HPA and XSA correct genuinely different directions.](assets/images/hpa/viz_c_direction_analysis.png)
+
+![Cosine similarity between attention-weighted average key and self-value direction across heads and positions.](assets/images/hpa/viz_c_direction_analysis.png)
+
+*Cosine similarity between the attention-weighted average key $\bar{k}_i$ and the self-value direction $v_i$, measured per position and head. The two correction axes are nearly orthogonal, so post-agg HPA and XSA correct genuinely different directions.*
+
 
 But the bigger lesson is structural:
 
@@ -252,23 +244,9 @@ This showed up experimentally. Post-agg HPA did not behave like a cheaper versio
 
 ### What HPA Is Trying to Do
 
-Consider associative recall. The sequence contains key-value pairs:
+Consider associative recall. The sequence contains key-value pairs: \([A: 3, B: 7, C: 1]\),
+then the model sees a query such as \([\text{QUERY}, B]\), and must output: \(7\).
 
-$$
-[A, 3, B, 7, C, 1],
-$$
-
-then the model sees a query such as:
-
-$$
-[\text{QUERY}, B],
-$$
-
-and must output:
-
-$$
-7.
-$$
 
 Standard attention solves this by using the query representation to attend to the position containing key $B$, then reading the value information from that position.
 
@@ -283,7 +261,7 @@ This is why I now think of HPA as a **de-addressing operator**.
 
 The model first uses keys to decide where to read. Then HPA tries to remove part of the key/address trace from what is read.
 
-This is a more honest story than “HPA projects values onto hyperplanes.” The hyperplane geometry is still the inspiration, but the operation is better described as:
+The hyperplane geometry is still the inspiration, but a more honest story is that operation is better described as:
 
 $$
 \text{read content} - \text{address shadow}.
@@ -317,13 +295,9 @@ The early result was:
 
 The important correction to the original writeup is scale of claim.
 
-Pre-agg HPA did **not** decisively surpass standard attention in these early runs. It showed a small positive signal. The result was interesting because it matched the geometric intuition, not because it was already a large empirical win.
+Pre-agg HPA did **not** decisively surpass standard attention in these early runs. It showed a small positive signal. The result was interesting because it matched the geometric intuition.
 
-The stronger conclusion from Part I was negative:
-
-> Post-aggregation HPA is not a faithful efficient approximation to pre-aggregation HPA.
-
-Moving the correction after the value mixture changes the mechanism too much.
+The stronger conclusion from Part I was negative, where post-aggregation HPA is not a faithful efficient approximation to pre-aggregation HPA. Moving the correction after the value mixture changes the mechanism too much.
 
 ---
 
@@ -366,7 +340,9 @@ In the retrieval-pressure sweeps, KeyNorm HPA was the clearest HPA-family winner
 
 In a separate focused retrieval run, KeyNorm HPA also beat standard attention on all tested settings, with a mean gain around `+0.079`.
 
-![Correction magnitude $\|\text{correction}\|/\|y\|$ across HPA variants. Pre-agg HPA modifies ~15–20% of the attention output; post-agg HPA only ~5%, which quantifies why pre-aggregation is the more aggressive — and more effective — mechanism. KeyNorm HPA applies the largest correction, consistent with its strongest recall gains.](assets/images/hpa/viz_b_correction_magnitude.png)
+![Correction magnitude relative to attention output, across HPA variants.](assets/images/hpa/viz_b_correction_magnitude.png)
+
+*Correction magnitude $\|\text{correction}\|/\|y\|$ across HPA variants. Pre-agg HPA modifies ~15–20% of the attention output; post-agg HPA only ~5%, which quantifies why pre-aggregation is the more aggressive — and more effective — mechanism. KeyNorm HPA applies the largest correction, consistent with its strongest recall gains.*
 
 The local Mac tiny-overfit run told a compatible story. After 80 steps on the embedded Shakespeare-style character corpus:
 
@@ -376,9 +352,9 @@ The local Mac tiny-overfit run told a compatible story. After 80 steps on the em
 | Vanilla HPA | 2.269 | 2.272 |
 | KeyNorm HPA | 2.225 | 2.225 |
 
-This does not prove scale, but it does show that KeyNorm HPA is not merely a retrieval-task trick. It trains cleanly and can slightly improve a tiny language-modeling objective.
+*These are not scaled experiments.* These experiments show that KeyNorm HPA is not merely a retrieval-task trick. It trains cleanly and can slightly improve a tiny language-modeling objective.
 
-The caveat: in some earlier LM runs, KeyNorm HPA hurt perplexity. So the safe conclusion is not “KeyNorm HPA always improves LM.” The safe conclusion is:
+The caveat: *These are not scaled experiments, so there is no evidence that “KeyNorm HPA always improves LM.”* The safer conclusion is:
 
 > Key normalization makes the HPA correction much more reliable under retrieval pressure and does not appear to introduce basic optimization instability.
 
@@ -405,8 +381,6 @@ The mechanism is attractive because it does not force a universal claim. It says
 | HPA heads | subtract address shadow and emphasize complementary content |
 
 ![Per-head attention heatmaps on the associative-recall task. Standard attention tends toward broad, similar distributions across heads; HeadSplit+KN develops a clear split — some heads stay broad, others become sharply peaked — which is the architectural pattern the head-split design was hoping to recover.](assets/images/hpa/viz_a_attn_heatmaps.png)
-
-I still think this is one of the best architectural ideas from the HPA line.
 
 ---
 
@@ -473,7 +447,7 @@ On the compact synthetic suite, vanilla HPA was usually close to standard attent
 
 #### Scaling
 
-At sequence length 1024 on CPU:
+At sequence length 1024 on *CPU*:
 
 | Method | ms / forward | Relative |
 |---|---:|---:|
