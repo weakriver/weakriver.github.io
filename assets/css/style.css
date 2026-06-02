@@ -144,6 +144,39 @@ body {
 [data-theme="dark"] #theme-toggle .icon-sun { display: inline-block; }
 [data-theme="dark"] #theme-toggle .icon-moon { display: none; }
 
+#lang-toggle {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-soft);
+  height: 36px;
+  min-width: 36px;
+  padding: 0 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-en-sans, system-ui, sans-serif);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  transition: all var(--transition);
+}
+#lang-toggle:hover {
+  color: var(--text);
+  border-color: var(--border-strong);
+  background: var(--bg-elevated);
+}
+#lang-toggle .lang-when-en { display: none; }
+#lang-toggle .lang-when-zh { display: inline-block; }
+[data-lang="en"] #lang-toggle .lang-when-en { display: inline-block; }
+[data-lang="en"] #lang-toggle .lang-when-zh { display: none; }
+
+/* Hero tagline: bilingual, swapped by [data-lang] on <html> */
+.hero-tagline .tagline-en { display: none; }
+[data-lang="en"] .hero-tagline .tagline-zh { display: none; }
+[data-lang="en"] .hero-tagline .tagline-en { display: inline; }
+
 /* ============================================
    Hero (list view top)
    ============================================ */

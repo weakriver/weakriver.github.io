@@ -3,6 +3,7 @@ title: Projective Attention
 date: 2026-05-10
 tags: [好玩的]
 excerpt: A projective geometry perspective on attention mechanisms. 
+related: [hpa, paa, otda, back-to-sdpa]
 ---
 
 *A projective geometry framework that reveals attention as a data-dependent neural network, and give us a fresh perspective on attention.*
@@ -548,7 +549,7 @@ I will provide some new attention mechanism candidates under the framework's gui
 
 ---
 
-### Looking back: Why this Matters
+### Why This Framework Matters
 
 The hyperplane activation framework isn't just a reinterpretation — it generates concrete predictions and design insights.
 

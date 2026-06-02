@@ -3,7 +3,7 @@ title: Hyperplane Projection Attention
 date: 2026-05-15
 tags: [好玩的]
 excerpt: Attention as Hyperplane Projections 
-related: [hello, projective-attention]
+related: [projective-attention, ppa, otda, back-to-sdpa]
 ---
 
 *A geometric derivation of Hyperplane-Projection Attention, what the experiments actually support, and where the mechanism is still unresolved.*

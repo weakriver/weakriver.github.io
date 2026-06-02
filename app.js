@@ -12,24 +12,7 @@ const MANIFEST_URL = POSTS_DIR + "manifest.json";
 const state = {
   posts: null,     // full array of {slug, title, date, tags, excerpt, body}
   activeTag: null,
-  uiLang: "zh",    // "zh" or "en" — UI chrome language (tags, "全部" chip, etc.)
 };
-
-/* ---------- UI language: tag translations ----------
- * Only known UI strings are translated. Unknown tags (e.g. "attention",
- * "transformers") are left as-is — they're already English. */
-const TAG_TRANSLATIONS = {
-  "全部":   "All",
-  "好玩的": "Fun stuff",
-  "念":     "Thoughts",
-  "瞎扯":   "rambling",
-  "观点":   "Opinion",
-  "方法":   "Method",
-};
-function tagLabel(t) {
-  if (state.uiLang === "en" && TAG_TRANSLATIONS[t]) return TAG_TRANSLATIONS[t];
-  return t;
-}
 
 /* ---------- Frontmatter parsing ---------- */
 // Minimal YAML-ish parser for: title, date, tags, excerpt, lang.
@@ -46,9 +29,9 @@ function parseFrontmatter(raw) {
     let val = line.slice(idx + 1).trim();
     if (!key) continue;
 
-    if (key === "tags" || key === "related") {
+    if (key === "tags") {
       if (val.startsWith("[") && val.endsWith("]")) val = val.slice(1, -1);
-      meta[key] = val
+      meta.tags = val
         .split(/[,，]/)
         .map((t) => t.trim().replace(/^['"]|['"]$/g, ""))
         .filter(Boolean);
@@ -289,36 +272,6 @@ function autoExcerpt(post) {
   return stripped.length > max ? stripped.slice(0, max) + "…" : stripped;
 }
 
-/* ---------- Related-posts section ---------- */
-// A post's frontmatter may include `related: [slug1, slug2, ...]`.
-// We resolve each slug to the actual post (title + date + lang) so the
-// titles stay in sync automatically.
-function renderRelatedHtml(post, allPosts) {
-  const slugs = post.related || [];
-  if (!slugs.length) return "";
-  const items = slugs
-    .map((s) => allPosts.find((p) => p.slug === s))
-    .filter(Boolean);
-  if (!items.length) return "";
-
-  const label = post.lang === "en" ? "Related reading" : "相关文章";
-  const lis = items
-    .map((p) => `
-      <li class="post-related-item">
-        <a class="post-related-link" data-lang="${p.lang}" href="#/post/${encodeURIComponent(p.slug)}">
-          <span class="post-related-link-title">${escapeHtml(titleAsText(p.title))}</span>
-          <span class="post-related-link-meta">${escapeHtml(formatDate(p.date, p.lang))}</span>
-        </a>
-      </li>`)
-    .join("");
-
-  return `
-    <aside class="post-related" aria-label="${escapeHtml(label)}">
-      <h3 class="post-related-title">${escapeHtml(label)}</h3>
-      <ul class="post-related-list">${lis}</ul>
-    </aside>`;
-}
-
 /* ---------- Table scroll wrapping ---------- */
 // Wide markdown tables overflow the prose column awkwardly. Wrap every
 // rendered <table> in a horizontally-scrollable container so it can spill
@@ -400,14 +353,14 @@ async function renderList() {
   };
 
   tagBar.appendChild(
-    makeChip(tagLabel("全部"), state.activeTag === null, () => {
+    makeChip("全部", state.activeTag === null, () => {
       state.activeTag = null;
       renderList();
     })
   );
   for (const t of allTags) {
     tagBar.appendChild(
-      makeChip(tagLabel(t), state.activeTag === t, () => {
+      makeChip(t, state.activeTag === t, () => {
         state.activeTag = state.activeTag === t ? null : t;
         renderList();
       })
@@ -419,10 +372,7 @@ async function renderList() {
     : posts;
 
   if (!filtered.length) {
-    status.textContent =
-      state.uiLang === "en"
-        ? `No posts tagged "${tagLabel(state.activeTag)}".`
-        : `没有标签为「${state.activeTag}」的文章。`;
+    status.textContent = `没有标签为「${state.activeTag}」的文章。`;
     listEl.innerHTML = "";
     return;
   }
@@ -431,7 +381,7 @@ async function renderList() {
   listEl.innerHTML = filtered
     .map((p) => {
       const tags = (p.tags || [])
-        .map((t) => `<span class="post-tag">${escapeHtml(tagLabel(t))}</span>`)
+        .map((t) => `<span class="post-tag">${escapeHtml(t)}</span>`)
         .join("");
       const excerpt = autoExcerpt(p);
       return `
@@ -482,7 +432,7 @@ async function renderPost(slug) {
   dateEl.textContent = formatDate(post.date, lang);
   dateEl.setAttribute("datetime", post.date || "");
   tagsEl.innerHTML = (post.tags || [])
-    .map((t) => `<span class="post-tag">${escapeHtml(tagLabel(t))}</span>`)
+    .map((t) => `<span class="post-tag">${escapeHtml(t)}</span>`)
     .join("");
 
   // Pre-extract math, run marked, restore math via KaTeX
@@ -498,16 +448,6 @@ async function renderPost(slug) {
   rewriteImageSources(contentEl, slug);
   wrapTables(contentEl);
   mountWidgets(contentEl);
-
-  // Replace any previous related-section before inserting a fresh one
-  const oldRelated = view.querySelector(".post-related");
-  if (oldRelated) oldRelated.remove();
-  const relatedHtml = renderRelatedHtml(post, posts);
-  if (relatedHtml) {
-    const postFooter = view.querySelector(".post-footer");
-    if (postFooter) postFooter.insertAdjacentHTML("beforebegin", relatedHtml);
-    else contentEl.insertAdjacentHTML("afterend", relatedHtml);
-  }
 
   document.title = `${titleAsText(post.title)} · 弱水`;
   window.scrollTo({ top: 0, behavior: "instant" in window ? "instant" : "auto" });
@@ -557,41 +497,10 @@ function setupTheme() {
   });
 }
 
-/* ---------- UI language ---------- */
-function getInitialLang() {
-  try {
-    const stored = localStorage.getItem("ruoshui-lang");
-    if (stored === "en" || stored === "zh") return stored;
-  } catch (_) {}
-  return "zh";
-}
-function applyLang(lang) {
-  state.uiLang = lang;
-  document.documentElement.dataset.lang = lang;
-  try { localStorage.setItem("ruoshui-lang", lang); } catch (_) {}
-}
-function setupLang() {
-  applyLang(getInitialLang());
-  const btn = document.getElementById("lang-toggle");
-  if (!btn) return;
-  btn.addEventListener("click", () => {
-    applyLang(state.uiLang === "zh" ? "en" : "zh");
-    // Re-render whichever view is currently visible so tag chips refresh.
-    const onPost = !document.getElementById("view-post").hidden;
-    if (onPost) {
-      const slug = document.getElementById("view-post").dataset.slug;
-      if (slug) renderPost(slug);
-    } else {
-      renderList();
-    }
-  });
-}
-
 /* ---------- Boot ---------- */
 window.addEventListener("hashchange", route);
 window.addEventListener("DOMContentLoaded", () => {
   setupTheme();
-  setupLang();
   const yearEl = document.getElementById("footer-year");
   if (yearEl) yearEl.textContent = new Date().getFullYear();
   route();
@@ -607,17 +516,4 @@ window.addEventListener("DOMContentLoaded", () => {
       document.documentElement.dataset.theme = "dark";
     }
   } catch (_) {}
-})();
-
-(function preApplyLang() {
-  try {
-    const stored = localStorage.getItem("ruoshui-lang");
-    if (stored === "en" || stored === "zh") {
-      document.documentElement.dataset.lang = stored;
-    } else {
-      document.documentElement.dataset.lang = "zh";
-    }
-  } catch (_) {
-    document.documentElement.dataset.lang = "zh";
-  }
 })();
