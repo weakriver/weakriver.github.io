@@ -2,7 +2,7 @@
 title: Projective Lesson on Attention
 date: 2026-05-31
 tags: [好玩的]
-related: [projective-attention, hpa, paa, otda]
+related: [projective-attention-framework, hpa, paa, otda]
 excerpt: What The Projective Geometry Lens Actually Teaches Us About Attention
 ---
 
@@ -776,6 +776,12 @@ Through a series of exploration, we found that the projective framework is not o
 ---
 
 *This is the final blog of the series. Hope you enjoyed the trip.*
+
+---
+
+
+code is here: [https://github.com/AntheaLi/Projective-Attention](https://github.com/AntheaLi/Projective-Attention)
+
 
 ---
 

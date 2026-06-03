@@ -597,6 +597,9 @@ We ran controls to test whether the geometry itself was responsible for the gain
 
 The controls changed the conclusion. The correct claim is not “the exact projection geometry is proven.” The correct claim is that key-normal de-addressing plus normalization is a useful inductive bias, but the experiments do not yet isolate it from nearby explanations.
 
+---
+
+code is here: [https://github.com/AntheaLi/Projective-Attention](https://github.com/AntheaLi/Projective-Attention)
 
 ---
 

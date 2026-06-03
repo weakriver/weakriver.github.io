@@ -3,7 +3,7 @@ title: Projection Activated Attention
 date: 2026-05-16
 tags: [好玩的]
 excerpt: Attention as Projection Activations
-related: [projective-attention, hpa, otda, back-to-sdpa]
+related: [projective-attention-framework, hpa, otda, back-to-sdpa]
 ---
 
 *Two attention mechanisms that use token-conditioned hyperplane activation layer*
@@ -588,6 +588,10 @@ It looks more promising for selective retrieval and passkey-style tasks, especia
 ---
 
 *The next blog will look at oriented two-sided attention mechanism that is also inspired by the projective attention framework*
+
+---
+
+code is here: [https://github.com/AntheaLi/Projective-Attention](https://github.com/AntheaLi/Projective-Attention)
 
 ---
 

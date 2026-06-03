@@ -2,7 +2,7 @@
 title: "Oriented Two-sided Attention"
 tags: [好玩的]
 date: 2026-05-29
-related: [projective-attention, hpa, paa, back-to-sdpa]
+related: [projective-attention-framework, hpa, paa, back-to-sdpa]
 excerpt: Attention with Oriented Two-Sided Decoding
 ---
 
@@ -677,6 +677,12 @@ Lessons we learned from this round are that we need
 If I had to summarize this round in one sentence:
 
 > OTDA clarified that the interesting projective direction is subtractive attention, not naive two-sided decoding.
+
+---
+
+
+code is here: [https://github.com/AntheaLi/Projective-Attention](https://github.com/AntheaLi/Projective-Attention)
+
 
 ---
 
